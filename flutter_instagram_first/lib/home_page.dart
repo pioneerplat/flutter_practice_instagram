@@ -20,14 +20,23 @@ class _HomePageState extends State<HomePage> {
 
   int _selectedIntex = 0;
 
+  static List<Widget> _screens = <Widget>[
+    Container(color: Colors.black,),
+    Container(color: Colors.green,),
+    Container(color: Colors.red,),
+    Container(color: Colors.blue,),
+    Container(color: Colors.pink,),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
             title: Text('cool app')
         ),
-        body: Container(
-          color: Colors.green,
+        body: IndexedStack(
+          index: _selectedIntex,
+          children: _screens,
         ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed, // 아이탬이 선택 되었을때 움직이지 않게 고정
