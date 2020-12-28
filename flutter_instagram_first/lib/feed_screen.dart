@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_first/widgets/post.dart';
 
 class FeedScreen extends StatelessWidget {
   @override
@@ -45,7 +46,6 @@ class FeedScreen extends StatelessWidget {
                   ),
                   onPressed: null)
             ],
-
           ),
       ),
 
@@ -54,11 +54,9 @@ class FeedScreen extends StatelessWidget {
   }
 
   Widget feedListBuilder(BuildContext context, int index) {
-    return Container(
-      //accents color를 인덱스의 수만큼 받아와서 하나씩 번갈아 가면서 사용한다는 뜻
-      color: Colors.accents[index % Colors.accents.length],
-      height: 100,
-    );
+    return Post(index);
   }
 }
+
+
 
