@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_first/feed_screen.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIntex = 0;
 
   static List<Widget> _screens = <Widget>[
-    Container(color: Colors.black,),
+    FeedScreen(),
     Container(color: Colors.green,),
     Container(color: Colors.red,),
     Container(color: Colors.blue,),
