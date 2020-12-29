@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 class Post extends StatelessWidget {
   final int index;
+  Size size;
 
-  const Post(this.index,{
+  Post(this.index,{
     Key key,
   }) : super(key: key);
 
@@ -17,11 +18,25 @@ class Post extends StatelessWidget {
 //      height: 100,
 //    );
 
+    if(size==null) {
+      //우리가 사용하고있는 디바이스의 사이즈
+      size = MediaQuery.of(context).size;
+    }
+
   //CashedNetworkImage는 이미지를 디바이스에 저장해놓은 후 다시 돌아왔을때 다운받은 이미지를 사용한다.
     //pub.dev에서 Installing-> dependencies에서 복사 -> pupspec.yaml에 붙여넣은다음 import해서 사
     return CachedNetworkImage(
       //가로200 세로300
-      imageUrl: 'https://picsum.photos/id/$index/200/300',
+      imageUrl: 'https://picsum.photos/id/$index/2000/2000',
+
+      //Url에서 이미지를 불러 오는 동안 loading시간에 할일 설정
+      placeholder: (BuildContext context, String url){
+        return Container(
+            width: size.width,
+            height: size.width,
+            child: Center(child: SizedBox(height: 60, width: 60,
+                child: CircularProgressIndicator(backgroundColor: Colors.black38, valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),))));
+      },
 
       //위 Url에서 다운받은 이미지를 imageProvider를 통해서 가져온다.
       imageBuilder: (BuildContext context, ImageProvider imageProvider,){
