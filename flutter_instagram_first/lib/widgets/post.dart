@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 
 class Post extends StatelessWidget {
   final int index;
@@ -31,11 +32,7 @@ class Post extends StatelessWidget {
 
       //Url에서 이미지를 불러 오는 동안 loading시간에 할일 설정
       placeholder: (BuildContext context, String url){
-        return Container(
-            width: size.width,
-            height: size.width,
-            child: Center(child: SizedBox(height: 60, width: 60,
-                child: CircularProgressIndicator(backgroundColor: Colors.black38, valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),))));
+        return MyProgressIndicator(containerSize: size.width,);
       },
 
       //위 Url에서 다운받은 이미지를 imageProvider를 통해서 가져온다.
