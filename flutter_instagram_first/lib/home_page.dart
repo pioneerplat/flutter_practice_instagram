@@ -17,6 +17,7 @@ class _HomePageState extends State<HomePage> {
     BottomNavigationBarItem(icon: Icon(Icons.add), label: " "),
     BottomNavigationBarItem(icon: Icon(Icons.healing), label: " "),
     BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: " ")
+
   ];
 
   int _selectedIntex = 0;
@@ -27,6 +28,7 @@ class _HomePageState extends State<HomePage> {
     Container(color: Colors.red,),
     Container(color: Colors.blue,),
     Container(color: Colors.pink,),
+
   ];
 
   @override
