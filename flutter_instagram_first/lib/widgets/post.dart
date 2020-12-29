@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
+import 'package:flutter_instagram_first/widgets/comment.dart';
 import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 import 'package:flutter_instagram_first/widgets/rounded_avatar.dart';
 
@@ -34,14 +35,32 @@ class Post extends StatelessWidget {
         _postHeader(),
         _postImage(),
         _postActions(),
-        Padding(
-          padding: const EdgeInsets.only(left: common_gap),
-          child: Text(
-            '12000 likes',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        )
+        _postLikes(),
+        _postCaption(),
       ],
+    );
+  }
+
+  Widget _postCaption() {
+    //하나의 Text안에 여러가지 style이 있을때 RichText를 사용
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          horizontal: common_gap, vertical: common_xxs_gap),
+      child: Comment(
+        showImage: false,
+        username: 'testingUser',
+        text: 'I have money!!!',
+      ),
+    );
+  }
+
+  Padding _postLikes() {
+    return Padding(
+      padding: const EdgeInsets.only(left: common_gap),
+      child: Text(
+        '12000 likes',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
     );
   }
 
