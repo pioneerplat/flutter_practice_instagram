@@ -29,39 +29,47 @@ class Post extends StatelessWidget {
     //CashedNetworkImage는 이미지를 디바이스에 저장해놓은 후 다시 돌아왔을때 다운받은 이미지를 사용한다.
     //pub.dev에서 Installing-> dependencies에서 복사 -> pupspec.yaml에 붙여넣은다음 import해서 사
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start, //왼쪽 정렬
       children: <Widget>[
         _postHeader(),
         _postImage(),
-        _postActions()
+        _postActions(),
+        Padding(
+          padding: const EdgeInsets.only(left: common_gap),
+          child: Text(
+            '12000 likes',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        )
       ],
     );
   }
 
   Row _postActions() {
     return Row(
-        children: <Widget>[
-          IconButton(
-              icon: ImageIcon(AssetImage('assets/images/bookmark.png')),
-              color: Colors.black87,
-              onPressed: null),
-          IconButton(
-              icon: ImageIcon(AssetImage('assets/images/comment.png')),
-              color: Colors.black87,
-              onPressed: null),
-          IconButton(
-              icon: ImageIcon(AssetImage('assets/images/direct_message.png')),
-              color: Colors.black87,
-              onPressed: null),
+      children: <Widget>[
+        IconButton(
+            icon: ImageIcon(AssetImage('assets/images/bookmark.png')),
+            color: Colors.black87,
+            onPressed: null),
+        IconButton(
+            icon: ImageIcon(AssetImage('assets/images/comment.png')),
+            color: Colors.black87,
+            onPressed: null),
+        IconButton(
+            icon: ImageIcon(AssetImage('assets/images/direct_message.png')),
+            color: Colors.black87,
+            onPressed: null),
 
-          //공간을 채우는 위젯
-          Spacer(),
+        //공간을 채우는 위젯
+        Spacer(),
 
-          IconButton(
-              icon: ImageIcon(AssetImage('assets/images/heart_selected.png')),
-              color: Colors.black87,
-              onPressed: null)
-        ],
-      );
+        IconButton(
+            icon: ImageIcon(AssetImage('assets/images/heart_selected.png')),
+            color: Colors.black87,
+            onPressed: null)
+      ],
+    );
   }
 
   Widget _postHeader() {
