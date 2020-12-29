@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
+import 'package:flutter_instagram_first/widgets/rounded_avatar.dart';
 
 class Post extends StatelessWidget {
   final int index;
@@ -43,14 +44,7 @@ class Post extends StatelessWidget {
         Padding(
           //common_xxs_gap은 common_size.dart파일에서 관리
           padding: const EdgeInsets.all(common_xxs_gap),
-          child: ClipOval(
-            child: CachedNetworkImage(
-              //랜덤이미지, 가로세로가 100인 이미지를 가져온
-              imageUrl: 'https://picsum.photos/100',
-              width: avatar_size,
-              height: avatar_size,
-            ),
-          ),
+          child: RoundedAvatar(),
         ),
         //Expanded 위젯으로 감싸주면 이미지와 IconButton의 공간을 제외한 나머지 공간을 Text로 채울수 있다.
         Expanded(child: Text('username')),
@@ -96,3 +90,5 @@ class Post extends StatelessWidget {
         });
   }
 }
+
+
