@@ -8,7 +8,7 @@ class ProfileBody extends StatefulWidget {
 }
 
 class _ProfileBodyState extends State<ProfileBody> {
-  bool seletedLeft = true;
+  SelectedTab _selectedTab = SelectedTab.left;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,8 @@ class _ProfileBodyState extends State<ProfileBody> {
   Widget _selectedIndicator() {
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
-      alignment: seletedLeft?Alignment.centerLeft:Alignment.centerRight,
+      // 가독성을 위해 true false로 하지않고 열거형을 이용해 left , right 로 사용
+      alignment: _selectedTab==SelectedTab.left ? Alignment.centerLeft : Alignment.centerRight,
       child: Container(
         height: 3,
         width: size.width / 2,
@@ -55,11 +56,11 @@ class _ProfileBodyState extends State<ProfileBody> {
             icon: ImageIcon(
               AssetImage('assets/images/grid.png'),
               // A ? B : C A가 true이면 B, false이면 C
-              color: seletedLeft ? Colors.black : Colors.black26,
+              color: _selectedTab==SelectedTab.left ? Colors.black : Colors.black26,
             ),
             onPressed: () {
               setState(() {
-                seletedLeft = true;
+                _selectedTab = SelectedTab.left;
               });
             },
           ),
@@ -68,11 +69,11 @@ class _ProfileBodyState extends State<ProfileBody> {
           child: IconButton(
             icon: ImageIcon(
               AssetImage('assets/images/saved.png'),
-              color: seletedLeft ? Colors.black26 : Colors.black,
+              color: _selectedTab==SelectedTab.left ? Colors.black26 : Colors.black,
             ),
             onPressed: () {
               setState(() {
-                seletedLeft = false;
+                _selectedTab = SelectedTab.right;
               });
             },
           ),
@@ -123,3 +124,5 @@ class _ProfileBodyState extends State<ProfileBody> {
     );
   }
 }
+
+enum SelectedTab{left, right}
