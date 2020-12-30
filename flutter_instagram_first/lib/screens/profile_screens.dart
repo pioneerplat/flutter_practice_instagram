@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_first/constants/common_size.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -7,11 +8,20 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: Colors.grey[100],
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _appbar()
+            _appbar(),
+            _username(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _username() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: common_gap),
+      child: Text('username', style: TextStyle(fontWeight: FontWeight.bold),),
     );
   }
 
