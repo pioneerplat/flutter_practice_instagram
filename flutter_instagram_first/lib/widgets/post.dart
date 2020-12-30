@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
+import 'package:flutter_instagram_first/constants/screen_size.dart';
 import 'package:flutter_instagram_first/widgets/comment.dart';
 import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 import 'package:flutter_instagram_first/widgets/rounded_avatar.dart';
 
 class Post extends StatelessWidget {
   final int index;
-  Size size;
+
 
   Post(
     this.index, {
@@ -22,10 +23,7 @@ class Post extends StatelessWidget {
 //      height: 100,
 //    );
 
-    if (size == null) {
-      //우리가 사용하고있는 디바이스의 사이즈
-      size = MediaQuery.of(context).size;
-    }
+
 
     //CashedNetworkImage는 이미지를 디바이스에 저장해놓은 후 다시 돌아왔을때 다운받은 이미지를 사용한다.
     //pub.dev에서 Installing-> dependencies에서 복사 -> pupspec.yaml에 붙여넣은다음 import해서 사

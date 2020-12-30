@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/screens/feed_screen.dart';
 import 'package:flutter_instagram_first/screens/profile_screens.dart';
+import 'constants/screen_size.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -38,6 +39,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (size == null) {
+      //우리가 사용하고있는 디바이스의 사이즈
+      size = MediaQuery.of(context).size;
+    }
     return Scaffold(
       body: IndexedStack(
         index: _selectedIntex,
