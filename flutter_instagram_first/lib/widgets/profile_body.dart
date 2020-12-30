@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
@@ -17,6 +18,7 @@ class _ProfileBodyState extends State<ProfileBody> {
       child: CustomScrollView(
         slivers: <Widget>[
           //SliverList는 list인데 Sliver로 감싼 list이다
+          //SliverList뷰
           SliverList(
             delegate: SliverChildListDelegate([
               _username(),
@@ -25,6 +27,27 @@ class _ProfileBodyState extends State<ProfileBody> {
               _tabButtons(),
               _selectedIndicator(),
             ]),
+          ),
+          //일반적인 뷰를 Sliver처럼 사용하려면 SliverToBoxAdapter로 감싸줘야 한다.
+          //SliverGrid를 사용하면 SliverToBoxAdapter로 감싸지 않아도 된다.
+
+          SliverToBoxAdapter(
+            child: GridView.count(
+              //스크롤 뷰 안에 스크롤뷰가 있는 상태라서 안에 있는 GridView는 스크롤을 받지 않겠다는 코드
+              physics: NeverScrollableScrollPhysics(),
+              //shrinkWrap:true로 주면 그리드뷰가 유효한 만큼만 자리를 차지한다.
+              shrinkWrap: true,
+              //Grid뷰 3칸 사용
+              crossAxisCount: 3,
+              //가로 세로 비율
+              childAspectRatio: 1,
+              children: List.generate(
+                  30,
+                  (index) => CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: "https://picsum.photos/id/$index/200/200",
+                      )),
+            ),
           )
         ],
       ),
@@ -35,7 +58,9 @@ class _ProfileBodyState extends State<ProfileBody> {
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
       // 가독성을 위해 true false로 하지않고 열거형을 이용해 left , right 로 사용
-      alignment: _selectedTab==SelectedTab.left ? Alignment.centerLeft : Alignment.centerRight,
+      alignment: _selectedTab == SelectedTab.left
+          ? Alignment.centerLeft
+          : Alignment.centerRight,
       child: Container(
         height: 3,
         width: size.width / 2,
@@ -56,7 +81,9 @@ class _ProfileBodyState extends State<ProfileBody> {
             icon: ImageIcon(
               AssetImage('assets/images/grid.png'),
               // A ? B : C A가 true이면 B, false이면 C
-              color: _selectedTab==SelectedTab.left ? Colors.black : Colors.black26,
+              color: _selectedTab == SelectedTab.left
+                  ? Colors.black
+                  : Colors.black26,
             ),
             onPressed: () {
               setState(() {
@@ -69,7 +96,9 @@ class _ProfileBodyState extends State<ProfileBody> {
           child: IconButton(
             icon: ImageIcon(
               AssetImage('assets/images/saved.png'),
-              color: _selectedTab==SelectedTab.left ? Colors.black26 : Colors.black,
+              color: _selectedTab == SelectedTab.left
+                  ? Colors.black26
+                  : Colors.black,
             ),
             onPressed: () {
               setState(() {
@@ -125,4 +154,4 @@ class _ProfileBodyState extends State<ProfileBody> {
   }
 }
 
-enum SelectedTab{left, right}
+enum SelectedTab { left, right }

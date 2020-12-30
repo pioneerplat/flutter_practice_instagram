@@ -116,7 +116,7 @@ class Post extends StatelessWidget {
   CachedNetworkImage _postImage() {
     return CachedNetworkImage(
         //가로200 세로300
-        imageUrl: 'https://picsum.photos/id/$index/2000/2000',
+        imageUrl: 'https://picsum.photos/id/$index/200/200',
 
         //Url에서 이미지를 불러 오는 동안 loading시간에 할일 설정
         placeholder: (BuildContext context, String url) {
