@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_instagram_first/feed_screen.dart';
+import 'package:flutter_instagram_first/screens/feed_screen.dart';
+import 'package:flutter_instagram_first/screens/profile_screens.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -17,37 +18,42 @@ class _HomePageState extends State<HomePage> {
     BottomNavigationBarItem(icon: Icon(Icons.add), label: " "),
     BottomNavigationBarItem(icon: Icon(Icons.healing), label: " "),
     BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: " ")
-
   ];
 
   int _selectedIntex = 0;
 
   static List<Widget> _screens = <Widget>[
     FeedScreen(),
-    Container(color: Colors.green,),
-    Container(color: Colors.red,),
-    Container(color: Colors.blue,),
-    Container(color: Colors.pink,),
-
+    Container(
+      color: Colors.green,
+    ),
+    Container(
+      color: Colors.red,
+    ),
+    Container(
+      color: Colors.blue,
+    ),
+    ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: IndexedStack(
-          index: _selectedIntex,
-          children: _screens,
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed, // 아이탬이 선택 되었을때 움직이지 않게 고정
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          items: btmNavItems,
-          unselectedItemColor: Colors.grey,
-          selectedItemColor: Colors.black,
-          currentIndex: _selectedIntex,
-          onTap: _onBtmItemClick,
-        ),
+      body: IndexedStack(
+        index: _selectedIntex,
+        children: _screens,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        // 아이탬이 선택 되었을때 움직이지 않게 고정
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: btmNavItems,
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.black,
+        currentIndex: _selectedIntex,
+        onTap: _onBtmItemClick,
+      ),
     );
   }
 
@@ -56,8 +62,5 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _selectedIntex = index;
     });
-
   }
 }
-
-
