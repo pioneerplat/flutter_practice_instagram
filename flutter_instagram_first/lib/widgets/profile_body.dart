@@ -60,21 +60,21 @@ class _ProfileBodyState extends State<ProfileBody> {
 
   GridView _images() {
     return GridView.count(
-          //스크롤 뷰 안에 스크롤뷰가 있는 상태라서 안에 있는 GridView는 스크롤을 받지 않겠다는 코드
-          physics: NeverScrollableScrollPhysics(),
-          //shrinkWrap:true로 주면 그리드뷰가 유효한 만큼만 자리를 차지한다.
-          shrinkWrap: true,
-          //Grid뷰 3칸 사용
-          crossAxisCount: 3,
-          //가로 세로 비율
-          childAspectRatio: 1,
-          children: List.generate(
-              30,
-              (index) => CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    imageUrl: "https://picsum.photos/id/$index/200/200",
-                  )),
-        );
+      //스크롤 뷰 안에 스크롤뷰가 있는 상태라서 안에 있는 GridView는 스크롤을 받지 않겠다는 코드
+      physics: NeverScrollableScrollPhysics(),
+      //shrinkWrap:true로 주면 그리드뷰가 유효한 만큼만 자리를 차지한다.
+      shrinkWrap: true,
+      //Grid뷰 3칸 사용
+      crossAxisCount: 3,
+      //가로 세로 비율
+      childAspectRatio: 1,
+      children: List.generate(
+          30,
+          (index) => CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: "https://picsum.photos/id/$index/200/200",
+              )),
+    );
   }
 
   Widget _selectedIndicator() {
@@ -109,11 +109,7 @@ class _ProfileBodyState extends State<ProfileBody> {
                   : Colors.black26,
             ),
             onPressed: () {
-              setState(() {
-                _selectedTab = SelectedTab.left;
-                _leftImagesPageMargin = 0;
-                _rightImagePageMargin = size.width;
-              });
+              _tabSelected(SelectedTab.left);
             },
           ),
         ),
@@ -126,16 +122,29 @@ class _ProfileBodyState extends State<ProfileBody> {
                   : Colors.black,
             ),
             onPressed: () {
-              setState(() {
-                _selectedTab = SelectedTab.right;
-                _leftImagesPageMargin = -size.width;
-                _rightImagePageMargin = 0;
-              });
+              _tabSelected(SelectedTab.right);
             },
           ),
         ),
       ],
     );
+  }
+
+  _tabSelected(SelectedTab selectedTab) {
+    setState(() {
+      switch (selectedTab) {
+        case SelectedTab.left:
+          _selectedTab = SelectedTab.left;
+          _leftImagesPageMargin = 0;
+          _rightImagePageMargin = size.width;
+          break;
+        case SelectedTab.right:
+          _selectedTab = SelectedTab.right;
+          _leftImagesPageMargin = -size.width;
+          _rightImagePageMargin = 0;
+          break;
+      }
+    });
   }
 
   Padding _editProfileBtn() {
