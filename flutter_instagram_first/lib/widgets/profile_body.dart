@@ -10,6 +10,8 @@ class ProfileBody extends StatefulWidget {
 
 class _ProfileBodyState extends State<ProfileBody> {
   SelectedTab _selectedTab = SelectedTab.left;
+  double _leftImagesPageMargin = 0;
+  double _rightImagePageMargin = size.width;
 
   @override
   Widget build(BuildContext context) {
@@ -28,30 +30,51 @@ class _ProfileBodyState extends State<ProfileBody> {
               _selectedIndicator(),
             ]),
           ),
-          //일반적인 뷰를 Sliver처럼 사용하려면 SliverToBoxAdapter로 감싸줘야 한다.
-          //SliverGrid를 사용하면 SliverToBoxAdapter로 감싸지 않아도 된다.
 
-          SliverToBoxAdapter(
-            child: GridView.count(
-              //스크롤 뷰 안에 스크롤뷰가 있는 상태라서 안에 있는 GridView는 스크롤을 받지 않겠다는 코드
-              physics: NeverScrollableScrollPhysics(),
-              //shrinkWrap:true로 주면 그리드뷰가 유효한 만큼만 자리를 차지한다.
-              shrinkWrap: true,
-              //Grid뷰 3칸 사용
-              crossAxisCount: 3,
-              //가로 세로 비율
-              childAspectRatio: 1,
-              children: List.generate(
-                  30,
-                  (index) => CachedNetworkImage(
-                        fit: BoxFit.cover,
-                        imageUrl: "https://picsum.photos/id/$index/200/200",
-                      )),
-            ),
-          )
+          imagesPager()
         ],
       ),
     );
+  }
+
+  SliverToBoxAdapter imagesPager() {
+    //일반적인 뷰를 Sliver처럼 사용하려면 SliverToBoxAdapter로 감싸줘야 한다.
+    //SliverGrid를 사용하면 SliverToBoxAdapter로 감싸지 않아도 된다.
+    return SliverToBoxAdapter(
+      child: Stack(children: [
+        AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          transform: Matrix4.translationValues(_leftImagesPageMargin, 0, 0),
+          curve: Curves.fastOutSlowIn,
+          child: _images(),
+        ),
+        AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          transform: Matrix4.translationValues(_rightImagePageMargin, 0, 0),
+          curve: Curves.fastOutSlowIn,
+          child: _images(),
+        ),
+      ]),
+    );
+  }
+
+  GridView _images() {
+    return GridView.count(
+          //스크롤 뷰 안에 스크롤뷰가 있는 상태라서 안에 있는 GridView는 스크롤을 받지 않겠다는 코드
+          physics: NeverScrollableScrollPhysics(),
+          //shrinkWrap:true로 주면 그리드뷰가 유효한 만큼만 자리를 차지한다.
+          shrinkWrap: true,
+          //Grid뷰 3칸 사용
+          crossAxisCount: 3,
+          //가로 세로 비율
+          childAspectRatio: 1,
+          children: List.generate(
+              30,
+              (index) => CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    imageUrl: "https://picsum.photos/id/$index/200/200",
+                  )),
+        );
   }
 
   Widget _selectedIndicator() {
@@ -88,6 +111,8 @@ class _ProfileBodyState extends State<ProfileBody> {
             onPressed: () {
               setState(() {
                 _selectedTab = SelectedTab.left;
+                _leftImagesPageMargin = 0;
+                _rightImagePageMargin = size.width;
               });
             },
           ),
@@ -103,6 +128,8 @@ class _ProfileBodyState extends State<ProfileBody> {
             onPressed: () {
               setState(() {
                 _selectedTab = SelectedTab.right;
+                _leftImagesPageMargin = -size.width;
+                _rightImagePageMargin = 0;
               });
             },
           ),
