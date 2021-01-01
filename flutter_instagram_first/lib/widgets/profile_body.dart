@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
+import 'package:flutter_instagram_first/widgets/rounded_avatar.dart';
 
 class ProfileBody extends StatefulWidget {
   @override
@@ -23,6 +24,35 @@ class _ProfileBodyState extends State<ProfileBody> {
           //SliverList뷰
           SliverList(
             delegate: SliverChildListDelegate([
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(common_gap),
+                    child: RoundedAvatar(
+                      size: 80,
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: common_gap),
+                      child: Table(
+                        children: [
+                          TableRow(children: [
+                            _valueText('123123'),
+                            _valueText('33'),
+                            _valueText('44'),
+                          ]),
+                          TableRow(children: [
+                            _labelText('Post'),
+                            _labelText('Followers'),
+                            _labelText('Following'),
+                          ])
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
               _username(),
               _userBio(),
               _editProfileBtn(),
@@ -36,6 +66,19 @@ class _ProfileBodyState extends State<ProfileBody> {
       ),
     );
   }
+
+  Text _valueText(String value) => Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      );
+
+  Text _labelText(String label) => Text(
+        label,
+        textAlign: TextAlign.center,
+        style: TextStyle(fontWeight: FontWeight.w300,
+        fontSize: 11),
+      );
 
   SliverToBoxAdapter imagesPager() {
     //일반적인 뷰를 Sliver처럼 사용하려면 SliverToBoxAdapter로 감싸줘야 한다.
