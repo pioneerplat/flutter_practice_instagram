@@ -2,9 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
+import 'package:flutter_instagram_first/screens/profile_screens.dart';
 import 'package:flutter_instagram_first/widgets/rounded_avatar.dart';
 
 class ProfileBody extends StatefulWidget {
+  final Function onMenuChanged;
+
+  const ProfileBody({Key key, this.onMenuChanged}) : super(key: key);
+
   @override
   _ProfileBodyState createState() => _ProfileBodyState();
 }
@@ -16,54 +21,87 @@ class _ProfileBodyState extends State<ProfileBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      ////CustomScrollView - slivers를 사용하는 이유는 그리드뷰 스크롤뷰를 같은 뷰에넣어 스크롤이 같이되게 하기 위함
-      child: CustomScrollView(
-        slivers: <Widget>[
-          //SliverList는 list인데 Sliver로 감싼 list이다
-          //SliverList뷰
-          SliverList(
-            delegate: SliverChildListDelegate([
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(common_gap),
-                    child: RoundedAvatar(
-                      size: 80,
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: common_gap),
-                      child: Table(
-                        children: [
-                          TableRow(children: [
-                            _valueText('123123'),
-                            _valueText('33'),
-                            _valueText('44'),
-                          ]),
-                          TableRow(children: [
-                            _labelText('Post'),
-                            _labelText('Followers'),
-                            _labelText('Following'),
-                          ])
+
+      return SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _appbar(),
+            Expanded(
+              ////CustomScrollView - slivers를 사용하는 이유는 그리드뷰 스크롤뷰를 같은 뷰에넣어 스크롤이 같이되게 하기 위함
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  //SliverList는 list인데 Sliver로 감싼 list이다
+                  //SliverList뷰
+                  SliverList(
+                    delegate: SliverChildListDelegate([
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(common_gap),
+                            child: RoundedAvatar(
+                              size: 80,
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: common_gap),
+                              child: Table(
+                                children: [
+                                  TableRow(children: [
+                                    _valueText('123123'),
+                                    _valueText('33'),
+                                    _valueText('44'),
+                                  ]),
+                                  TableRow(children: [
+                                    _labelText('Post'),
+                                    _labelText('Followers'),
+                                    _labelText('Following'),
+                                  ])
+                                ],
+                              ),
+                            ),
+                          )
                         ],
                       ),
-                    ),
-                  )
+                      _username(),
+                      _userBio(),
+                      _editProfileBtn(),
+                      _tabButtons(),
+                      _selectedIndicator(),
+                    ]),
+                  ),
+
+                  imagesPager()
                 ],
               ),
-              _username(),
-              _userBio(),
-              _editProfileBtn(),
-              _tabButtons(),
-              _selectedIndicator(),
-            ]),
-          ),
+            ),
+          ],
+        ),
+      );
+  }
 
-          imagesPager()
-        ],
-      ),
+  Row _appbar() {
+    return Row(
+      children: [
+        //Text 가 중앙으로 가게하기 위해 SizedBox로 공간을 채워준다.
+        SizedBox(
+          width: 50,
+        ),
+        Expanded(
+            child: Text(
+              'The Pioneerplat',
+              textAlign: TextAlign.center,
+            )),
+        IconButton(
+          icon: Icon(Icons.menu),
+          //onPressed로 지정해 주면 아이콘이 검정색으로 변한다.
+          onPressed: () {
+            // StatefulWidget 해당 위젯의 값에 접근하고 싶으면 widget.값 하면 된다
+            widget.onMenuChanged();
+          },
+        )
+      ],
     );
   }
 
