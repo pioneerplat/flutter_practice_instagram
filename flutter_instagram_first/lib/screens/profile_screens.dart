@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
 import 'package:flutter_instagram_first/widgets/profile_body.dart';
+import 'package:flutter_instagram_first/widgets/profile_side_menu.dart';
+
+//변수가 class바깥에 정의되어 있으면 자동으로 static변수가 되어서 바깥에서 접근이 가능하다
+//static은 앱이 실행되면서 값이 생성 되는것이 아니라 앱이 실행됨과 동시에 값이 존재한다
+const duration = Duration(milliseconds: 1000);
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -8,8 +13,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final duration = Duration(milliseconds: 300);
-  final menuWidth = size.width/2;
+  final menuWidth = size.width / 3 * 2;
   MenuStatus _menuStatus = MenuStatus.closed;
   double bodyXPos = 0;
   double menuXPos = size.width;
@@ -38,7 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ? MenuStatus.opened
                       : MenuStatus.closed;
 
-                  switch(_menuStatus){
+                  switch (_menuStatus) {
                     case MenuStatus.opened:
                       bodyXPos = -menuWidth;
                       menuXPos = size.width - menuWidth;
@@ -53,17 +57,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             //Positined의 top은 Stack의 위에서 얼마나 떨어져있나, Bottom은 아래에서 얼마나 떨어져있나
             AnimatedContainer(
-              duration: duration,
-              curve: Curves.fastOutSlowIn,
-              transform: Matrix4.translationValues(menuXPos, 0, 0),
-              child: Positioned(
+                duration: duration,
+                curve: Curves.fastOutSlowIn,
+                transform: Matrix4.translationValues(menuXPos, 0, 0),
+                child: Positioned(
                   top: 0,
                   bottom: 0,
                   width: menuWidth,
-                  child: Container(
-                    color: Colors.deepPurple,
-                  )),
-            ),
+                  child: ProfileSideMenu(menuWidth),
+                )),
           ],
         ));
   }

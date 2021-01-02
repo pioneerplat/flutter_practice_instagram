@@ -124,13 +124,13 @@ class _ProfileBodyState extends State<ProfileBody> {
     return SliverToBoxAdapter(
       child: Stack(children: [
         AnimatedContainer(
-          duration: Duration(milliseconds: 300),
+          duration: duration,
           transform: Matrix4.translationValues(_leftImagesPageMargin, 0, 0),
           curve: Curves.fastOutSlowIn,
           child: _images(),
         ),
         AnimatedContainer(
-          duration: Duration(milliseconds: 300),
+          duration: duration,
           transform: Matrix4.translationValues(_rightImagePageMargin, 0, 0),
           curve: Curves.fastOutSlowIn,
           child: _images(),
@@ -160,7 +160,7 @@ class _ProfileBodyState extends State<ProfileBody> {
 
   Widget _selectedIndicator() {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
+      duration: duration,
       // 가독성을 위해 true false로 하지않고 열거형을 이용해 left , right 로 사용
       alignment: _selectedTab == SelectedTab.left
           ? Alignment.centerLeft
