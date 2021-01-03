@@ -14,71 +14,90 @@ class ProfileBody extends StatefulWidget {
   _ProfileBodyState createState() => _ProfileBodyState();
 }
 
-class _ProfileBodyState extends State<ProfileBody> {
+//extends는 상속을 하는 거라면 with 는 자체를 가져와서 사용하는 것
+class _ProfileBodyState extends State<ProfileBody>
+    with SingleTickerProviderStateMixin {
   SelectedTab _selectedTab = SelectedTab.left;
   double _leftImagesPageMargin = 0;
   double _rightImagePageMargin = size.width;
+  AnimationController _iconAnimationController;
+
+  //해당 State가 새로 생성되었을때 initState가 실행
+  @override
+  void initState() {
+    //this는 _ProfileBodyState 클래스의 인스턴스를 의미함
+    _iconAnimationController =
+        AnimationController(vsync: this, duration: duration);
+    super.initState();
+  }
+
+  //해당 State가 버려질때 dispose가 실행
+  @override
+  void dispose() {
+    //dispose해줘야 메모리 누수(memory leak)을 해결할 수 있다.
+    _iconAnimationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-      return SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _appbar(),
-            Expanded(
-              ////CustomScrollView - slivers를 사용하는 이유는 그리드뷰 스크롤뷰를 같은 뷰에넣어 스크롤이 같이되게 하기 위함
-              child: CustomScrollView(
-                slivers: <Widget>[
-                  //SliverList는 list인데 Sliver로 감싼 list이다
-                  //SliverList뷰
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(common_gap),
-                            child: RoundedAvatar(
-                              size: 80,
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          _appbar(),
+          Expanded(
+            ////CustomScrollView - slivers를 사용하는 이유는 그리드뷰 스크롤뷰를 같은 뷰에넣어 스크롤이 같이되게 하기 위함
+            child: CustomScrollView(
+              slivers: <Widget>[
+                //SliverList는 list인데 Sliver로 감싼 list이다
+                //SliverList뷰
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(common_gap),
+                          child: RoundedAvatar(
+                            size: 80,
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: common_gap),
+                            child: Table(
+                              children: [
+                                TableRow(children: [
+                                  _valueText('123123'),
+                                  _valueText('33'),
+                                  _valueText('44'),
+                                ]),
+                                TableRow(children: [
+                                  _labelText('Post'),
+                                  _labelText('Followers'),
+                                  _labelText('Following'),
+                                ])
+                              ],
                             ),
                           ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: common_gap),
-                              child: Table(
-                                children: [
-                                  TableRow(children: [
-                                    _valueText('123123'),
-                                    _valueText('33'),
-                                    _valueText('44'),
-                                  ]),
-                                  TableRow(children: [
-                                    _labelText('Post'),
-                                    _labelText('Followers'),
-                                    _labelText('Following'),
-                                  ])
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      _username(),
-                      _userBio(),
-                      _editProfileBtn(),
-                      _tabButtons(),
-                      _selectedIndicator(),
-                    ]),
-                  ),
+                        )
+                      ],
+                    ),
+                    _username(),
+                    _userBio(),
+                    _editProfileBtn(),
+                    _tabButtons(),
+                    _selectedIndicator(),
+                  ]),
+                ),
 
-                  imagesPager()
-                ],
-              ),
+                imagesPager()
+              ],
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 
   Row _appbar() {
@@ -90,15 +109,21 @@ class _ProfileBodyState extends State<ProfileBody> {
         ),
         Expanded(
             child: Text(
-              'The Pioneerplat',
-              textAlign: TextAlign.center,
-            )),
+          'The Pioneerplat',
+          textAlign: TextAlign.center,
+        )),
         IconButton(
-          icon: Icon(Icons.menu),
+          icon: AnimatedIcon(
+              icon: AnimatedIcons.menu_close,
+              progress: _iconAnimationController),
           //onPressed로 지정해 주면 아이콘이 검정색으로 변한다.
           onPressed: () {
             // StatefulWidget 해당 위젯의 값에 접근하고 싶으면 widget.값 하면 된다
             widget.onMenuChanged();
+            // completed:끝지점, dismissed:시작지점, forward:시작에서 끝으로 가는 중간, reverse: 끝에서 시작으로 가는 중간
+            _iconAnimationController.status == AnimationStatus.completed
+                ? _iconAnimationController.reverse()
+                : _iconAnimationController.forward();
           },
         )
       ],
@@ -114,8 +139,7 @@ class _ProfileBodyState extends State<ProfileBody> {
   Text _labelText(String label) => Text(
         label,
         textAlign: TextAlign.center,
-        style: TextStyle(fontWeight: FontWeight.w300,
-        fontSize: 11),
+        style: TextStyle(fontWeight: FontWeight.w300, fontSize: 11),
       );
 
   SliverToBoxAdapter imagesPager() {
