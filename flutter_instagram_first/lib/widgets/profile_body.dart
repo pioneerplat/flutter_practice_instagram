@@ -13,7 +13,9 @@ class ProfileBody extends StatefulWidget {
   @override
   _ProfileBodyState createState() => _ProfileBodyState();
 }
-
+// SingleTickerProviderStateMixin 클래스는 애니메이션을 처리하기 위한 헬퍼 클래스
+// 상속에 포함시키지 않으면 컨트롤러를 생성할 수 없다.
+// mixin은 다중 상속에서 코드를 재사용하기 위한 한 가지 방법으로 with 키워드와 함께 사용
 //extends는 상속을 하는 거라면 with 는 자체를 가져와서 사용하는 것
 class _ProfileBodyState extends State<ProfileBody>
     with SingleTickerProviderStateMixin {
@@ -23,9 +25,12 @@ class _ProfileBodyState extends State<ProfileBody>
   AnimationController _iconAnimationController;
 
   //해당 State가 새로 생성되었을때 initState가 실행
+  //Controller는 initState에서 생성해줘야 하는가?
   @override
   void initState() {
     //this는 _ProfileBodyState 클래스의 인스턴스를 의미함
+    // SingleTickerProviderStateMixin를 상속 받아서
+    // vsync에 this 형태로 전달해야 애니메이션이 정상 처리된다.
     _iconAnimationController =
         AnimationController(vsync: this, duration: duration);
     super.initState();
