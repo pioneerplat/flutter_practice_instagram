@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_first/constants/common_size.dart';
 
 class SignUpForm extends StatefulWidget {
   @override
@@ -16,15 +17,13 @@ class _SignUpFormState extends State<SignUpForm> {
       key: _formkey,
       child: ListView(
         children: [
-          TextFormField(
-
+          SizedBox(
+            height: common_l_gap,
           ),
-          TextFormField(
-
-          ),
-          TextFormField(
-
-          ),
+          Image.asset('assets/images/insta_text_logo.png'),
+          TextFormField(),
+          TextFormField(),
+          TextFormField(),
         ],
       ),
     );
