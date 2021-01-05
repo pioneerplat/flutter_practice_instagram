@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_first/screens/auth_screen.dart';
 
 class ProfileSideMenu extends StatelessWidget {
   final double menuWith;
 
   //{}안에다가 넣어주면 옵션값이 되어서 넣어줘도 되고 안넣어줘도 되는 값이 되기때문에 this.menuWith를 밖으로 뺀다
-  const ProfileSideMenu(
-    this.menuWith, {
+  const ProfileSideMenu(this.menuWith, {
     Key key,
   }) : super(key: key);
 
@@ -30,6 +30,10 @@ class ProfileSideMenu extends StatelessWidget {
                 color: Colors.black87,
               ),
               title: Text('Sign out'),
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => AuthScreen()));
+              },
             ),
           ],
         ),

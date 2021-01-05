@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
+import 'package:flutter_instagram_first/home_page.dart';
 
 class SignUpForm extends StatefulWidget {
   @override
@@ -86,6 +87,11 @@ class _SignUpFormState extends State<SignUpForm> {
                   // 위 3개의 validator 가 전부 null을 반환하면 true가 오고 그렇지 않으면 false가 온다
                   if (_formkey.currentState.validate()) {
                     print('Validation success!!');
+                    //Navigator라는 클라스를 사용해 인스턴스를 가지고 와서 화면을 바꿔준다
+                    //pushReplacement 는 현재화면을 없애고 HomePage로 화면을 바꿔 준다
+                    //pushReplacement 말고 push를 쓰면 현재화면을 없애지 않고 뒤로 보낸다
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => HomePage()));
                   }
                 },
                 child: Text(
