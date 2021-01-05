@@ -61,7 +61,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 obscureText: true,
                 decoration: _textInputDecor('Password'),
                 validator: (text) {
-                  if (text.isNotEmpty && text.length > 5) {
+                  if (text.isNotEmpty && text.length > 1) {
                     return null;
                   } else {
                     return '제대로 된 비밀번호를 입력해 주세요.';
@@ -102,6 +102,27 @@ class _SignUpFormState extends State<SignUpForm> {
                 ),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6)),
+              ),
+              SizedBox(height: common_s_gap,),
+              Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    height: 1,
+                    child: Container(
+                      color: Colors.grey[300],
+                      height: 1,
+                    ),
+                  ),
+                  Container(
+                    color: Colors.grey[50],
+                    height: 3,
+                    width: 60,
+                  ),
+                  Text('OR', style: TextStyle(color: Colors.grey[400], fontWeight: FontWeight.bold),)
+                ],
               )
             ],
           ),
