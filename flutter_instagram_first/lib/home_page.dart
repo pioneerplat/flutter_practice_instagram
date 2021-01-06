@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_first/screens/camera_screen.dart';
 import 'package:flutter_instagram_first/screens/feed_screen.dart';
 import 'package:flutter_instagram_first/screens/profile_screens.dart';
 import 'constants/screen_size.dart';
@@ -29,7 +30,7 @@ class _HomePageState extends State<HomePage> {
       color: Colors.green,
     ),
     Container(
-      color: Colors.red,
+      color: Colors.black,
     ),
     Container(
       color: Colors.blue,
@@ -63,9 +64,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onBtmItemClick(int index) {
-    print(index);
-    setState(() {
-      _selectedIntex = index;
-    });
+    switch (index) {
+      case 2:
+        //새로운 창을 띄우는 방법 중 하나 (외우자)
+        //Navigator : 앱에서 여기저기 이동할 수 있도록 도와주는 Class
+        //Navigator.of(context) 네비게이터의 상태 인덱스를 가져온다
+        //pushReplacement 와 push가 있는데 push는 현재화면을 없애지 않고 그위로 가져온다
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => CameraScreen()));
+        break;
+      //case로 선택된 index말고 다른값이 들어오면
+      default:
+        {
+          print(index);
+          setState(() {
+            _selectedIntex = index;
+          });
+        }
+    }
   }
 }
