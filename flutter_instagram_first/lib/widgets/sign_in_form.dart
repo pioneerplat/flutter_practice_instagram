@@ -4,7 +4,6 @@ import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/home_page.dart';
 import 'package:flutter_instagram_first/widgets/or_divider.dart';
 
-
 class SignInForm extends StatefulWidget {
   @override
   _SignInFormState createState() => _SignInFormState();
@@ -69,9 +68,22 @@ class _SignInFormState extends State<SignInForm> {
                   }
                 },
               ),
+
+              FlatButton(
+                onPressed: () {},
+                // 부모클래스에 Align 위젯이 없을때 사용할 수 있다
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Text('Forgotten Password?',
+                      style: TextStyle(color: Colors.blue)),
+                ),
+              ),
+
               SizedBox(
                 height: common_s_gap,
               ),
+
+              //Sign in FlatButton
               _submitButton(context),
               SizedBox(
                 height: common_s_gap,
@@ -115,4 +127,3 @@ class _SignInFormState extends State<SignInForm> {
     );
   }
 }
-
