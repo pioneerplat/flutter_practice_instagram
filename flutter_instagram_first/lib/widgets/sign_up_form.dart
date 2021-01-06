@@ -81,53 +81,77 @@ class _SignUpFormState extends State<SignUpForm> {
                   }
                 },
               ),
-              FlatButton(
-                color: Colors.blue,
-                onPressed: () {
-                  // 위 3개의 validator 가 전부 null을 반환하면 true가 오고 그렇지 않으면 false가 온다
-                  if (_formkey.currentState.validate()) {
-                    print('Validation success!!');
-                    //Navigator라는 클라스를 사용해 인스턴스를 가지고 와서 화면을 바꿔준다
-                    //pushReplacement 는 현재화면을 없애고 HomePage로 화면을 바꿔 준다
-                    //pushReplacement 말고 push를 쓰면 현재화면을 없애지 않고 뒤로 보낸다
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => HomePage()));
-                  }
-                },
-                child: Text(
-                  'Join',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6)),
+              SizedBox(
+                height: common_s_gap,
               ),
-              SizedBox(height: common_s_gap,),
-              Stack(
-                alignment: Alignment.center,
-                children: <Widget>[
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    height: 1,
-                    child: Container(
-                      color: Colors.grey[300],
-                      height: 1,
-                    ),
-                  ),
-                  Container(
-                    color: Colors.grey[50],
-                    height: 3,
-                    width: 60,
-                  ),
-                  Text('OR', style: TextStyle(color: Colors.grey[400], fontWeight: FontWeight.bold),)
-                ],
-              )
+              _submitButton(context),
+              SizedBox(
+                height: common_s_gap,
+              ),
+              _orDivider(),
+              //ImageIcon 나의 Image를 이용하여 아이콘을 만듬
+              FlatButton.icon(
+                  onPressed: () {},
+                  //textColor에 Icon과 Text 모두 포함
+                  textColor: Colors.blue,
+                  icon: ImageIcon(AssetImage('assets/images/facebook.png')),
+                  label: Text("Login with Facebook")),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  FlatButton _submitButton(BuildContext context) {
+    return FlatButton(
+              color: Colors.blue,
+              onPressed: () {
+                // 위 3개의 validator 가 전부 null을 반환하면 true가 오고 그렇지 않으면 false가 온다
+                if (_formkey.currentState.validate()) {
+                  print('Validation success!!');
+                  //Navigator라는 클라스를 사용해 인스턴스를 가지고 와서 화면을 바꿔준다
+                  //pushReplacement 는 현재화면을 없애고 HomePage로 화면을 바꿔 준다
+                  //pushReplacement 말고 push를 쓰면 현재화면을 없애지 않고 뒤로 보낸다
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                }
+              },
+              child: Text(
+                'Join',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
+            );
+  }
+
+  Stack _orDivider() {
+    return Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        Positioned(
+          left: 0,
+          right: 0,
+          height: 1,
+          child: Container(
+            color: Colors.grey[300],
+            height: 1,
+          ),
+        ),
+        Container(
+          color: Colors.grey[50],
+          height: 3,
+          width: 60,
+        ),
+        Text(
+          'OR',
+          style:
+              TextStyle(color: Colors.grey[400], fontWeight: FontWeight.bold),
+        )
+      ],
     );
   }
 
