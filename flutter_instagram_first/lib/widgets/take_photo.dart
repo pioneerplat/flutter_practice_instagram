@@ -29,7 +29,8 @@ class _TakePhotoState extends State<TakePhoto> {
                 width: size.width,
                 height: size.width,
                 color: Colors.black,
-                child: (snapshot.hasData) ? _getPreview(snapshot.data) : _progress,
+                child:
+                    (snapshot.hasData) ? _getPreview(snapshot.data) : _progress,
               ),
               Expanded(
                 //컨테이너 전체가 버튼
@@ -67,7 +68,24 @@ class _TakePhotoState extends State<TakePhoto> {
           //해당 snapshot이 올때까지 기다려준다
           //ConnectionState.done이 되면 initialize가 끝난걸 알 수 있다
           if (snapshot.connectionState == ConnectionState.done) {
-            return CameraPreview(_controller);
+
+            //3. 마지막으로 ClipRect위젯으로 감싸서 OverflowBox로인해 화면바깥으로 나간 화면은 잘준다
+            return ClipRect(
+              //1.OverflowBox : 해당 child위젯이 부모 위젯의 사이즈 밖으로 나갈 수 있도록 하는 위젯
+              child: OverflowBox(
+                alignment: Alignment.center,
+                //2.FittedBox를 이용해 가로길이에 맞춰 화면을 주었다. 대신 OverflowBox로 늘어난 화면은 화면바깥으로 남아있다
+                child: FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Container(
+                    width: size.width,
+                    //가로길이를 카메라의 원래 비율로 나누어준다
+                    height: size.width/_controller.value.aspectRatio,
+                    child: CameraPreview(_controller),
+                  ),
+                ),
+              ),
+            );
           } else {
             return _progress;
           }
