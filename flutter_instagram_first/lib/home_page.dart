@@ -1,3 +1,4 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
 import 'package:flutter_instagram_first/screens/camera_screen.dart';
@@ -95,9 +96,11 @@ class _HomePageState extends State<HomePage> {
       SnackBar snackBar = SnackBar(
         content: Text('사진, 파일, 마이크 접근 허용 해주셔야 카메라 사용 가능합니다.'),
         action: SnackBarAction(
-          label: 'OK',
+          label: 'OK',textColor: Colors.grey,
           onPressed: () {
             _key.currentState.hideCurrentSnackBar();
+            //셋팅창 열기
+            AppSettings.openAppSettings();
           },
         ),
       );
