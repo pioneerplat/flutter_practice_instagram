@@ -58,13 +58,12 @@ class _MyGalleryState extends State<MyGallery> {
               },
               child: Image(
                 image: DeviceImage(localImage, scale: 0.1),
+                //image비율은 변하지 않고 화면을 꽉채운다
+                fit: BoxFit.cover,
               ),
             ))
         .toList();
   }
 
-  Future<Uint8List> localImageToBytes(
-      GalleryState galleryState, LocalImage localImage) {
-    return localImage.getScaledImageBytes(galleryState.localImageProvider, 0.3);
-  }
+
 }
