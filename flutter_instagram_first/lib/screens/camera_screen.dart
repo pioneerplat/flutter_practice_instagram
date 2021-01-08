@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/models/camera_state.dart';
+import 'package:flutter_instagram_first/models/gallery_state.dart';
 import 'package:flutter_instagram_first/widgets/my_gallery.dart';
 import 'package:flutter_instagram_first/widgets/take_photo.dart';
 import 'package:provider/provider.dart';
@@ -7,11 +8,13 @@ import 'package:provider/single_child_widget.dart';
 
 class CameraScreen extends StatefulWidget {
   CameraState _cameraState = CameraState();
+  GalleryState _galleryState = GalleryState();
 
   @override
   // PageView를 컨트롤하기 위한 컨트롤러
   _CameraScreenState createState() {
     _cameraState.getReadyToTakePhoto();
+    _galleryState.initProvider();
     return _CameraScreenState();
   }
 }
@@ -36,6 +39,7 @@ class _CameraScreenState extends State<CameraScreen> {
         //여기서는 _cameraState.getReadyToTakePhoto();를 먼저 하기 위해서 밑에 방법을 사용한다
         //ChangeNotifierProvider(create: (context) => CameraState())
         ChangeNotifierProvider<CameraState>.value(value: widget._cameraState),
+        ChangeNotifierProvider<GalleryState>.value(value: widget._galleryState),
       ],
       child: Scaffold(
         appBar: AppBar(
