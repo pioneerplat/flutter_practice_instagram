@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
 import 'package:flutter_instagram_first/models/camera_state.dart';
+import 'package:flutter_instagram_first/screens/share_post_screen.dart';
 import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -59,7 +62,7 @@ class _TakePhotoState extends State<TakePhoto> {
               child: OutlineButton(
                 onPressed: () {
                   if(cameraState.isReadyToTakePhoto){
-                    _attemptTakePhoto(cameraState);
+                    _attemptTakePhoto(cameraState, context);
                   }
                 },
                 shape: CircleBorder(),
@@ -108,7 +111,7 @@ class _TakePhotoState extends State<TakePhoto> {
 // });
   }
 
-  void _attemptTakePhoto(CameraState cameraState) async{
+  void _attemptTakePhoto(CameraState cameraState, BuildContext context) async{
     // 시간을 이미지 명으로 사용하기 위해 가져온다
     final String timeInMilli = DateTime.now().microsecondsSinceEpoch.toString();
     try{
@@ -116,6 +119,13 @@ class _TakePhotoState extends State<TakePhoto> {
       final path = join((await getTemporaryDirectory()).path, '$timeInMilli.png');
 
       await cameraState.controller.takePicture(path);
+
+      File imageFile = File(path);
+
+      //화면에 사진찍은걸 보여줌
+      //(_) 원래 context를 받아와야하지만 지금은 사용하지 않기때문에 _로 대체함
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => SharePostScreen(imageFile)));
+
     }catch(e){
 
     }
