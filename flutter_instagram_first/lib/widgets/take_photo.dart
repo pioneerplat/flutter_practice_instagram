@@ -4,6 +4,8 @@ import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
 import 'package:flutter_instagram_first/models/camera_state.dart';
 import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class TakePhoto extends StatefulWidget {
@@ -55,7 +57,11 @@ class _TakePhotoState extends State<TakePhoto> {
 
               //shape만 버튼
               child: OutlineButton(
-                onPressed: () {},
+                onPressed: () {
+                  if(cameraState.isReadyToTakePhoto){
+                    _attemptTakePhoto(cameraState);
+                  }
+                },
                 shape: CircleBorder(),
                 borderSide: BorderSide(color: Colors.black12, width: 20),
               ),
@@ -100,5 +106,18 @@ class _TakePhotoState extends State<TakePhoto> {
     //  return _progress;
     //}
 // });
+  }
+
+  void _attemptTakePhoto(CameraState cameraState) async{
+    // 시간을 이미지 명으로 사용하기 위해 가져온다
+    final String timeInMilli = DateTime.now().microsecondsSinceEpoch.toString();
+    try{
+      //getTemporaryDirectory()).path 저장되는 폴더 위치 , $timeInMilli.png 파일명
+      final path = join((await getTemporaryDirectory()).path, '$timeInMilli.png');
+
+      await cameraState.controller.takePicture(path);
+    }catch(e){
+
+    }
   }
 }
