@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 class CameraScreen extends StatefulWidget {
-
   CameraState _cameraState = CameraState();
+
   @override
   // PageView를 컨트롤하기 위한 컨트롤러
   _CameraScreenState createState() {
@@ -34,7 +34,6 @@ class _CameraScreenState extends State<CameraScreen> {
         //여기서는 _cameraState.getReadyToTakePhoto();를 먼저 하기 위해서 밑에 방법을 사용한다
         //ChangeNotifierProvider(create: (context) => CameraState())
         ChangeNotifierProvider<CameraState>.value(value: widget._cameraState),
-
       ],
       child: Scaffold(
         appBar: AppBar(
@@ -75,7 +74,8 @@ class _CameraScreenState extends State<CameraScreen> {
           selectedItemColor: Colors.black,
           unselectedItemColor: Colors.black54,
           items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'GALLERY'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.ac_unit), label: 'GALLERY'),
             BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'PHOTO'),
             BottomNavigationBarItem(icon: Icon(Icons.ac_unit), label: 'VIDEO')
           ],
@@ -96,5 +96,3 @@ class _CameraScreenState extends State<CameraScreen> {
     });
   }
 }
-
-
