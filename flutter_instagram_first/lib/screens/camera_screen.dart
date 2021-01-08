@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/models/camera_state.dart';
+import 'package:flutter_instagram_first/widgets/my_gallery.dart';
 import 'package:flutter_instagram_first/widgets/take_photo.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -43,9 +44,7 @@ class _CameraScreenState extends State<CameraScreen> {
         body: PageView(
           controller: _pageController,
           children: <Widget>[
-            Container(
-              color: Colors.cyanAccent,
-            ),
+            MyGallery(),
             TakePhoto(),
             Container(
               color: Colors.greenAccent,
@@ -90,8 +89,7 @@ class _CameraScreenState extends State<CameraScreen> {
   void _onItemTabbed(index) {
     print(index);
     setState(() {
-      // onPageChanged에 넣어줬기 때문에 굳이 넣어주지 않아도 된다
-      //_currentIndex = index;
+      _currentIndex = index;
       _pageController.animateToPage(_currentIndex,
           duration: Duration(milliseconds: 200), curve: Curves.fastOutSlowIn);
     });
