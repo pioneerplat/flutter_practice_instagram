@@ -9,7 +9,7 @@ onAuthStateChanged => authStateChanges()
  */
 
 class FirebaseAuthState extends ChangeNotifier {
-  FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.progress;
+  FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.signout;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User _user;
 
@@ -28,7 +28,7 @@ class FirebaseAuthState extends ChangeNotifier {
   //[] 옵션으로 넣어줘도 되고 안 넣어 줘도 된다
   void changeFirebaseAuthStatus([FirebaseAuthStatus firebaseAuthStatus]) {
     if (_firebaseAuthStatus != null) {
-      _firebaseAuthStatus = _firebaseAuthStatus;
+      _firebaseAuthStatus = firebaseAuthStatus;
     } else {
       if (_firebaseAuthStatus != null) {
         _firebaseAuthStatus = FirebaseAuthStatus.signin;

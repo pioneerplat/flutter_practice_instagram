@@ -29,15 +29,12 @@ class MyApp extends StatelessWidget {
 
                 case FirebaseAuthStatus.signout:
                   return AuthScreen();
-                case FirebaseAuthStatus.progress:
-                  return MyProgressIndicator();
                 case FirebaseAuthStatus.signin:
                   return HomePage();
                 default:
                   return MyProgressIndicator();
               }
-            },
-            child: HomePage()),
+            }),
         theme: ThemeData(primarySwatch: white),
       ),
     );
