@@ -25,6 +25,16 @@ class FirebaseAuthState extends ChangeNotifier {
     });
   }
 
+  void signOut(){
+    _firebaseAuthStatus = FirebaseAuthStatus.signout;
+    if(_user != null){
+      _user = null;
+      _firebaseAuth.signOut();
+    }
+    notifyListeners();
+
+  }
+
   //[] 옵션으로 넣어줘도 되고 안 넣어 줘도 된다
   void changeFirebaseAuthStatus([FirebaseAuthStatus firebaseAuthStatus]) {
     if (_firebaseAuthStatus != null) {
