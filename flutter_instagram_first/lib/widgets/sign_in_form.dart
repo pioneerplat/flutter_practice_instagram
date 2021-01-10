@@ -119,7 +119,7 @@ class _SignInFormState extends State<SignInForm> {
 
           //클릭으로 바꿔줄게 없기 때문에 listen: false
           Provider.of<FirebaseAuthState>(context, listen: false)
-              .changeFirebaseAuthStatus(FirebaseAuthStatus.signin);
+              .login(email: _emailController.text, password: _pwController.text);
         }
       },
       child: Text(

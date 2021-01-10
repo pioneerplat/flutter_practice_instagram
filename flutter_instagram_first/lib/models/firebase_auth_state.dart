@@ -19,10 +19,18 @@ class FirebaseAuthState extends ChangeNotifier {
       if (user == null && _user == null) {
         return; //그냥 끝낸다
       } else if (user != _user) {
-        _user = user;
-        changeFirebaseAuthStatus();
+         _user = user;
+         changeFirebaseAuthStatus();
       }
     });
+  }
+
+  void registerUser({@required String email, @required String password}){
+    _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+  }
+
+  void login({@required String email, @required String password}){
+    _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
   }
 
   void signOut(){
@@ -37,7 +45,7 @@ class FirebaseAuthState extends ChangeNotifier {
 
   //[] 옵션으로 넣어줘도 되고 안 넣어 줘도 된다
   void changeFirebaseAuthStatus([FirebaseAuthStatus firebaseAuthStatus]) {
-    if (_firebaseAuthStatus != null) {
+    if (firebaseAuthStatus != null) {
       _firebaseAuthStatus = firebaseAuthStatus;
     } else {
       if (_firebaseAuthStatus != null) {
