@@ -15,26 +15,33 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   FirebaseAuthState _firebaseAuthState = FirebaseAuthState();
-
+  Widget _currentWidget;
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<FirebaseAuthState>.value(
       value: _firebaseAuthState,
       child: MaterialApp(
         //home: AuthScreen(),
-        home: Consumer<FirebaseAuthState>(
-            builder: (BuildContext context, FirebaseAuthState firebaseAuthState,
-                Widget child) {
-              switch(firebaseAuthState.firebaseAuthStatus){
+        home: Consumer<FirebaseAuthState>(builder: (BuildContext context,
+            FirebaseAuthState firebaseAuthState, Widget child) {
 
-                case FirebaseAuthStatus.signout:
-                  return AuthScreen();
-                case FirebaseAuthStatus.signin:
-                  return HomePage();
-                default:
-                  return MyProgressIndicator();
-              }
-            }),
+
+          switch (firebaseAuthState.firebaseAuthStatus) {
+            case FirebaseAuthStatus.signout:
+              _currentWidget = AuthScreen();
+              break;
+            case FirebaseAuthStatus.signin:
+              _currentWidget = HomePage();
+              break;
+            default:
+              _currentWidget = MyProgressIndicator();
+          }
+          //자연스럽게 화면 전환하기 위해
+          return AnimatedSwitcher(
+            duration: Duration(milliseconds: 300),
+            child: _currentWidget,
+          );
+        }),
         theme: ThemeData(primarySwatch: white),
       ),
     );
