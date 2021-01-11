@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_instagram_first/utills/simple_snackbar.dart';
 
 /*
 FirebaseUser => User
@@ -89,6 +91,44 @@ class FirebaseAuthState extends ChangeNotifier {
     if (_user != null) {
       _user = null;
       _firebaseAuth.signOut();
+    }
+    notifyListeners();
+  }
+
+  //context는 알림창 역할을 하는 SnackBar를 사용하기 위해
+  void loginWithFacebook(BuildContext context) async {
+    final facebookLogin = FacebookLogin();
+    //facebookLogin.logIn의 반환 타입인 FacebookLoginResult 타입으로 받아오기 위해 await로 감싸준다
+    //final result = await facebookLogin.logIn(['email']);
+    final FacebookLoginResult result = await facebookLogin.logIn(['email']);
+    switch(result.status){
+      //로그인 성공
+      case FacebookLoginStatus.loggedIn:
+        _handleFacebookTokenWithFirebase(context, result.accessToken.token);
+        break;
+
+        //로그인 취소
+      case FacebookLoginStatus.cancelledByUser:
+        simpleSnackbar(context, 'User cancel facebook sign in');
+        break;
+
+        //로그인 과정에서 에러
+      case FacebookLoginStatus.error:
+        simpleSnackbar(context, 'Error while facebook sign in 잉?');
+        break;
+    }
+  }
+
+  //SnackBar를 위한 context
+  void _handleFacebookTokenWithFirebase(BuildContext context, String token) async {
+    //토큰을 사용해서 파이어베이스로 로그인하기
+    final OAuthCredential credential = FacebookAuthProvider.credential(token);
+    final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+    final User user = userCredential.user;
+    if(user == null) {
+      simpleSnackbar(context, '페이스북 로그인이 실패했다 나중에 다시해봐');
+    } else {
+      _user = user;
     }
     notifyListeners();
   }
