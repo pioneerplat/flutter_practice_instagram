@@ -15,6 +15,7 @@ class FirebaseAuthState extends ChangeNotifier {
   FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.signout;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User _user;
+  FacebookLogin _facebookLogin;
 
   void watchAuthChange() {
     //authStateChanges stream을 통해서 변화가 될 때마다 user를 계속 던져준다
@@ -60,9 +61,11 @@ class FirebaseAuthState extends ChangeNotifier {
     });
   }
 
-  void login(BuildContext context, {@required String email, @required String password}) {
+  void login(BuildContext context,
+      {@required String email, @required String password}) {
     _firebaseAuth
-        .signInWithEmailAndPassword(email: email.trim(), password: password.trim())
+        .signInWithEmailAndPassword(
+            email: email.trim(), password: password.trim())
         .catchError((error) {
       String _message = "";
       switch (error.code) {
@@ -86,46 +89,52 @@ class FirebaseAuthState extends ChangeNotifier {
     });
   }
 
-  void signOut() {
+  void signOut() async {
     _firebaseAuthStatus = FirebaseAuthStatus.signout;
     if (_user != null) {
       _user = null;
-      _firebaseAuth.signOut();
+      await _firebaseAuth.signOut();
+      if (await _facebookLogin.isLoggedIn) {
+        await _facebookLogin.logOut();
+      }
     }
     notifyListeners();
   }
 
   //context는 알림창 역할을 하는 SnackBar를 사용하기 위해
   void loginWithFacebook(BuildContext context) async {
-    final facebookLogin = FacebookLogin();
+    if (_facebookLogin == null) _facebookLogin = FacebookLogin();
     //facebookLogin.logIn의 반환 타입인 FacebookLoginResult 타입으로 받아오기 위해 await로 감싸준다
     //final result = await facebookLogin.logIn(['email']);
-    final FacebookLoginResult result = await facebookLogin.logIn(['email']);
-    switch(result.status){
+    final FacebookLoginResult result = await _facebookLogin.logIn(['email']);
+    switch (result.status) {
       //로그인 성공
       case FacebookLoginStatus.loggedIn:
         _handleFacebookTokenWithFirebase(context, result.accessToken.token);
         break;
 
-        //로그인 취소
+      //로그인 취소
       case FacebookLoginStatus.cancelledByUser:
         simpleSnackbar(context, 'User cancel facebook sign in');
         break;
 
-        //로그인 과정에서 에러
+      //로그인 과정에서 에러
       case FacebookLoginStatus.error:
         simpleSnackbar(context, 'Error while facebook sign in 잉?');
+        _facebookLogin.logOut();
         break;
     }
   }
 
   //SnackBar를 위한 context
-  void _handleFacebookTokenWithFirebase(BuildContext context, String token) async {
+  void _handleFacebookTokenWithFirebase(
+      BuildContext context, String token) async {
     //토큰을 사용해서 파이어베이스로 로그인하기
     final OAuthCredential credential = FacebookAuthProvider.credential(token);
-    final UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+    final UserCredential userCredential =
+        await _firebaseAuth.signInWithCredential(credential);
     final User user = userCredential.user;
-    if(user == null) {
+    if (user == null) {
       simpleSnackbar(context, '페이스북 로그인이 실패했다 나중에 다시해봐');
     } else {
       _user = user;
