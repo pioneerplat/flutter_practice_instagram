@@ -26,10 +26,13 @@ class FirebaseAuthState extends ChangeNotifier {
     });
   }
 
-  void registerUser(BuildContext context, {@required String email, @required String password}) {
+  void registerUser(BuildContext context,
+      {@required String email, @required String password}) {
     _firebaseAuth
-    //.trim() 하면 모든 띄어쓰기를 제거해 준다
-        .createUserWithEmailAndPassword(email: email.trim(), password: password.trim())
+        .createUserWithEmailAndPassword(
+            //.trim() 하면 모든 띄어쓰기를 제거해 준다
+            email: email.trim(),
+            password: password.trim())
         .catchError((error) {
       print(error);
       String _message = "";
@@ -44,17 +47,41 @@ class FirebaseAuthState extends ChangeNotifier {
           _message = "좀 더 복잡한 패스워드를 ";
           break;
         case 'operation-not-allowed':
-          _message = "이건 무슨 에러지?";
+          _message = "이건 무슨 에러지? 해당 동작은 여기서 금지야";
           break;
       }
 
-      SnackBar snackBar = SnackBar(content: Text(_message),);
+      SnackBar snackBar = SnackBar(
+        content: Text(_message),
+      );
       Scaffold.of(context).showSnackBar(snackBar);
     });
   }
 
-  void login({@required String email, @required String password}) {
-    _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+  void login(BuildContext context, {@required String email, @required String password}) {
+    _firebaseAuth
+        .signInWithEmailAndPassword(email: email.trim(), password: password.trim())
+        .catchError((error) {
+      String _message = "";
+      switch (error.code) {
+        case 'invalid-email':
+          _message = "올바른 이메일 넣어줘";
+          break;
+        case 'user-disabled':
+          _message = "너 차단됨? ㅋ";
+          break;
+        case 'user-not-found':
+          _message = "아이디가 없어";
+          break;
+        case 'wrong-password':
+          _message = "password 틀렸어";
+          break;
+      }
+      SnackBar snackBar = SnackBar(
+        content: Text(_message),
+      );
+      Scaffold.of(context).showSnackBar(snackBar);
+    });
   }
 
   void signOut() {
