@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_instagram_first/repo/user_network_repository.dart';
 import 'package:flutter_instagram_first/utills/simple_snackbar.dart';
 
 /*
@@ -34,9 +35,9 @@ class FirebaseAuthState extends ChangeNotifier {
   }
 
   void registerUser(BuildContext context,
-      {@required String email, @required String password}) {
+      {@required String email, @required String password}) async {
     changeFirebaseAuthStatus(FirebaseAuthStatus.progress);
-    _firebaseAuth
+    AuthResult authResult = await _firebaseAuth
         .createUserWithEmailAndPassword(
             //.trim() 하면 모든 띄어쓰기를 제거해 준다
             email: email.trim(),
@@ -64,6 +65,17 @@ class FirebaseAuthState extends ChangeNotifier {
       );
       Scaffold.of(context).showSnackBar(snackBar);
     });
+
+    FirebaseUser firebaseUser = authResult.user;
+    if (firebaseUser == null) {
+      SnackBar snackBar = SnackBar(
+        content: Text("Please try again later"),
+      );
+    } else {
+      //todo send data to firestore
+      await userNetworkRepository.attemptCreateUser(
+          userKey: firebaseUser.uid, email: firebaseUser.email);
+    }
   }
 
   void login(BuildContext context,
@@ -110,7 +122,6 @@ class FirebaseAuthState extends ChangeNotifier {
 
   //context는 알림창 역할을 하는 SnackBar를 사용하기 위해
   void loginWithFacebook(BuildContext context) async {
-
     changeFirebaseAuthStatus(FirebaseAuthStatus.progress);
 
     if (_facebookLogin == null) _facebookLogin = FacebookLogin();
@@ -140,7 +151,8 @@ class FirebaseAuthState extends ChangeNotifier {
   void _handleFacebookTokenWithFirebase(
       BuildContext context, String token) async {
     //토큰을 사용해서 파이어베이스로 로그인하기
-    final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: token);
+    final AuthCredential credential =
+        FacebookAuthProvider.getCredential(accessToken: token);
     final AuthResult authResult =
         await _firebaseAuth.signInWithCredential(credential);
     final FirebaseUser user = authResult.user;

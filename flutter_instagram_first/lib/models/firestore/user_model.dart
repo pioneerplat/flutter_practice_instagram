@@ -30,6 +30,20 @@ class UserModel {
     snapshot.documentID,
     reference: snapshot.reference
   );
+
+  static Map<String, dynamic> getMapForCreateUser(String email){
+    Map<String, dynamic> map = Map();
+    map[KEY_PROFILEIMG] = "";
+    //@이를 제외하고 @ 양쪽의 데이터를 가지고 와서 리스트로 만들어줌
+    map[KEY_USERNAME] = email.split("@")[0];
+    map[KEY_EMAIL] = email;
+    map[KEY_LIKEDPOSTS] = [];
+    map[KEY_FOLLOWERS] = 0;
+    map[KEY_FOLLOWINGS] = [];
+    map[KEY_MYPOSTS] = [];
+    return map;
+  }
+
 }
 
 
