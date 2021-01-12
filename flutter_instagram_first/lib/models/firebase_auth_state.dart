@@ -12,7 +12,8 @@ onAuthStateChanged => authStateChanges()
  */
 
 class FirebaseAuthState extends ChangeNotifier {
-  FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.signout;
+  //상태 기본값
+  FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.progress;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User _user;
   FacebookLogin _facebookLogin;
@@ -21,6 +22,7 @@ class FirebaseAuthState extends ChangeNotifier {
     //authStateChanges stream을 통해서 변화가 될 때마다 user를 계속 던져준다
     _firebaseAuth.authStateChanges().listen((user) {
       if (user == null && _user == null) {
+        changeFirebaseAuthStatus();
         return; //그냥 끝낸다
       } else if (user != _user) {
         _user = user;
@@ -31,6 +33,7 @@ class FirebaseAuthState extends ChangeNotifier {
 
   void registerUser(BuildContext context,
       {@required String email, @required String password}) {
+    changeFirebaseAuthStatus(FirebaseAuthStatus.progress);
     _firebaseAuth
         .createUserWithEmailAndPassword(
             //.trim() 하면 모든 띄어쓰기를 제거해 준다
@@ -63,6 +66,7 @@ class FirebaseAuthState extends ChangeNotifier {
 
   void login(BuildContext context,
       {@required String email, @required String password}) {
+    changeFirebaseAuthStatus(FirebaseAuthStatus.progress);
     _firebaseAuth
         .signInWithEmailAndPassword(
             email: email.trim(), password: password.trim())
@@ -90,6 +94,7 @@ class FirebaseAuthState extends ChangeNotifier {
   }
 
   void signOut() async {
+    changeFirebaseAuthStatus(FirebaseAuthStatus.progress);
     _firebaseAuthStatus = FirebaseAuthStatus.signout;
     if (_user != null) {
       _user = null;
@@ -99,10 +104,14 @@ class FirebaseAuthState extends ChangeNotifier {
       }
     }
     notifyListeners();
+    return;
   }
 
   //context는 알림창 역할을 하는 SnackBar를 사용하기 위해
   void loginWithFacebook(BuildContext context) async {
+
+    changeFirebaseAuthStatus(FirebaseAuthStatus.progress);
+
     if (_facebookLogin == null) _facebookLogin = FacebookLogin();
     //facebookLogin.logIn의 반환 타입인 FacebookLoginResult 타입으로 받아오기 위해 await로 감싸준다
     //final result = await facebookLogin.logIn(['email']);
