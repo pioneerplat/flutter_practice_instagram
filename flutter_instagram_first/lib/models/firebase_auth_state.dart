@@ -13,19 +13,21 @@ onAuthStateChanged => authStateChanges()
 
 class FirebaseAuthState extends ChangeNotifier {
   //상태 기본값
-  FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.signout;
+  //FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.signout;
+  FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.progress;
+
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  User _user;
+  FirebaseUser _firebaseUser;
   FacebookLogin _facebookLogin;
 
   void watchAuthChange() {
     //authStateChanges stream을 통해서 변화가 될 때마다 user를 계속 던져준다
-    _firebaseAuth.authStateChanges().listen((user) {
-      if (user == null && _user == null) {
-       // changeFirebaseAuthStatus();
+    _firebaseAuth.onAuthStateChanged.listen((user) {
+      if (user == null && _firebaseUser == null) {
+        changeFirebaseAuthStatus();
         return; //그냥 끝낸다
-      } else if (user != _user) {
-        _user = user;
+      } else if (user != _firebaseUser) {
+        _firebaseUser = user;
         changeFirebaseAuthStatus();
       }
     });
@@ -96,8 +98,8 @@ class FirebaseAuthState extends ChangeNotifier {
   void signOut() async {
     changeFirebaseAuthStatus(FirebaseAuthStatus.progress);
     _firebaseAuthStatus = FirebaseAuthStatus.signout;
-    if (_user != null) {
-      _user = null;
+    if (_firebaseUser != null) {
+      _firebaseUser = null;
       await _firebaseAuth.signOut();
       if (await _facebookLogin.isLoggedIn) {
         await _facebookLogin.logOut();
@@ -138,14 +140,14 @@ class FirebaseAuthState extends ChangeNotifier {
   void _handleFacebookTokenWithFirebase(
       BuildContext context, String token) async {
     //토큰을 사용해서 파이어베이스로 로그인하기
-    final OAuthCredential credential = FacebookAuthProvider.credential(token);
-    final UserCredential userCredential =
+    final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: token);
+    final AuthResult authResult =
         await _firebaseAuth.signInWithCredential(credential);
-    final User user = userCredential.user;
+    final FirebaseUser user = authResult.user;
     if (user == null) {
       simpleSnackbar(context, '페이스북 로그인이 실패했다 나중에 다시해봐');
     } else {
-      _user = user;
+      _firebaseUser = user;
     }
     notifyListeners();
   }
