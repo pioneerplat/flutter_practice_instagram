@@ -13,7 +13,7 @@ onAuthStateChanged => authStateChanges()
 
 class FirebaseAuthState extends ChangeNotifier {
   //상태 기본값
-  FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.progress;
+  FirebaseAuthStatus _firebaseAuthStatus = FirebaseAuthStatus.signout;
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User _user;
   FacebookLogin _facebookLogin;
@@ -22,7 +22,7 @@ class FirebaseAuthState extends ChangeNotifier {
     //authStateChanges stream을 통해서 변화가 될 때마다 user를 계속 던져준다
     _firebaseAuth.authStateChanges().listen((user) {
       if (user == null && _user == null) {
-        changeFirebaseAuthStatus();
+       // changeFirebaseAuthStatus();
         return; //그냥 끝낸다
       } else if (user != _user) {
         _user = user;
@@ -104,7 +104,6 @@ class FirebaseAuthState extends ChangeNotifier {
       }
     }
     notifyListeners();
-    return;
   }
 
   //context는 알림창 역할을 하는 SnackBar를 사용하기 위해
