@@ -169,7 +169,8 @@ class FirebaseAuthState extends ChangeNotifier {
     if (firebaseAuthStatus != null) {
       _firebaseAuthStatus = firebaseAuthStatus;
     } else {
-      if (_firebaseAuthStatus != null) {
+      //if (_firebaseAuthStatus != null) { 이거때문에 에러남..
+      if (_firebaseUser != null) {
         _firebaseAuthStatus = FirebaseAuthStatus.signin;
       } else {
         _firebaseAuthStatus = FirebaseAuthStatus.signout;
