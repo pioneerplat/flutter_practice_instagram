@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_instagram_first/models/firestore/user_model.dart';
 
-class USerModelState extends ChangeNotifier {
+class UserModelState extends ChangeNotifier {
   UserModel _userModel;
 
   UserModel get userModel => _userModel;

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/material_white.dart';
 import 'package:flutter_instagram_first/home_page.dart';
 import 'package:flutter_instagram_first/models/firebase_auth_state.dart';
+import 'package:flutter_instagram_first/models/user_model_state.dart';
+import 'package:flutter_instagram_first/repo/user_network_repository.dart';
 import 'package:flutter_instagram_first/screens/auth_screen.dart';
 import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 import 'package:provider/provider.dart';
@@ -16,19 +18,31 @@ void main() async {
 class MyApp extends StatelessWidget {
   FirebaseAuthState _firebaseAuthState = FirebaseAuthState();
   Widget _currentWidget;
+
   @override
   Widget build(BuildContext context) {
-   _firebaseAuthState.watchAuthChange();
-    return ChangeNotifierProvider<FirebaseAuthState>.value(
-      value: _firebaseAuthState,
+    _firebaseAuthState.watchAuthChange();
+    return MultiProvider(
+      providers: [
+        //value는 기존에 생성되어 있는 데이터를 넣어주는 것
+        ChangeNotifierProvider<FirebaseAuthState>.value(
+            value: _firebaseAuthState),
+        //value를 사용하지 않고 생성자를 사용해 UserModelState를 바로 생성해 준다
+        ChangeNotifierProvider<UserModelState>(
+          create: (_) => UserModelState(),
+        ),
+      ],
       child: MaterialApp(
         //home: AuthScreen(),
         home: Consumer<FirebaseAuthState>(builder: (BuildContext context,
             FirebaseAuthState firebaseAuthState, Widget child) {
-
-
           switch (firebaseAuthState.firebaseAuthStatus) {
             case FirebaseAuthStatus.signout:
+              userNetworkRepository
+                  .getUserModelStream(firebaseAuthState.firebaseUser.uid)
+                  .listen((userModel) {
+                    Provider.of<UserModelState>(context).userModel = userModel;
+              });
               _currentWidget = AuthScreen();
               break;
             case FirebaseAuthStatus.signin:
