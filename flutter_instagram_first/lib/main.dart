@@ -38,14 +38,15 @@ class MyApp extends StatelessWidget {
             FirebaseAuthState firebaseAuthState, Widget child) {
           switch (firebaseAuthState.firebaseAuthStatus) {
             case FirebaseAuthStatus.signout:
-              userNetworkRepository
-                  .getUserModelStream(firebaseAuthState.firebaseUser.uid)
-                  .listen((userModel) {
-                    Provider.of<UserModelState>(context).userModel = userModel;
-              });
               _currentWidget = AuthScreen();
               break;
             case FirebaseAuthStatus.signin:
+              userNetworkRepository
+                  .getUserModelStream(firebaseAuthState.firebaseUser.uid)
+                  .listen((userModel) {
+                //해당 데이터를 변경할 때 notifyListeners()가 있으면 listen: false를 넣어야 한다
+                Provider.of<UserModelState>(context, listen: false).userModel = userModel;
+              });
               _currentWidget = HomePage();
               break;
             default:

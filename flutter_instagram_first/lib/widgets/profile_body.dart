@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
+import 'package:flutter_instagram_first/models/user_model_state.dart';
 import 'package:flutter_instagram_first/screens/profile_screens.dart';
 import 'package:flutter_instagram_first/widgets/rounded_avatar.dart';
+import 'package:provider/provider.dart';
 
 class ProfileBody extends StatefulWidget {
   final Function onMenuChanged;
@@ -88,7 +90,7 @@ class _ProfileBodyState extends State<ProfileBody>
                         )
                       ],
                     ),
-                    _username(),
+                    _username(context),
                     _userBio(),
                     _editProfileBtn(),
                     _tabButtons(),
@@ -279,11 +281,11 @@ class _ProfileBodyState extends State<ProfileBody>
     );
   }
 
-  Widget _username() {
+  Widget _username(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: common_gap),
       child: Text(
-        'username',
+        Provider.of<UserModelState>(context).userModel.username,
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
     );
