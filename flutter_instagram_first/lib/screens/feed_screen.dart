@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_first/models/user_model_state.dart';
 import 'package:flutter_instagram_first/repo/user_network_repository.dart';
 import 'package:flutter_instagram_first/widgets/post.dart';
+import 'package:provider/provider.dart';
 
 class FeedScreen extends StatelessWidget {
   @override
@@ -50,6 +52,7 @@ class FeedScreen extends StatelessWidget {
                 color: Colors.black87,
               ),
               onPressed: () {
+                //Provider.of<UserModelState>(context, listen: false).clear();
               },
             )
           ],

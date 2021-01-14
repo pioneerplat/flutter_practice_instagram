@@ -38,15 +38,13 @@ class MyApp extends StatelessWidget {
             FirebaseAuthState firebaseAuthState, Widget child) {
           switch (firebaseAuthState.firebaseAuthStatus) {
             case FirebaseAuthStatus.signout:
+              _clearUserModel(context);
               _currentWidget = AuthScreen();
               break;
             case FirebaseAuthStatus.signin:
-              userNetworkRepository
-                  .getUserModelStream(firebaseAuthState.firebaseUser.uid)
-                  .listen((userModel) {
-                //해당 데이터를 변경할 때 notifyListeners()가 있으면 listen: false를 넣어야 한다
-                Provider.of<UserModelState>(context, listen: false).userModel = userModel;
-              });
+              //listen을 하면 해당 stream을 구독하고 있는 상태이다 다른 stream을 연결할 때 구독을 취소해 줘야 한다
+              //즉 로그아웃을 하면 구독을 취소해 줘야
+              _initUserModel(firebaseAuthState, context);
               _currentWidget = HomePage();
               break;
             default:
@@ -61,5 +59,23 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(primarySwatch: white),
       ),
     );
+  }
+
+  void _initUserModel(
+      FirebaseAuthState firebaseAuthState, BuildContext context) {
+    UserModelState userModelState =
+        Provider.of<UserModelState>(context, listen: false);
+    userModelState.currentStreamSub = userNetworkRepository
+        .getUserModelStream(firebaseAuthState.firebaseUser.uid)
+        .listen((userModel) {
+          //userModel 업데이트
+      userModelState.userModel = userModel;
+    });
+  }
+
+  void _clearUserModel(BuildContext context) {
+    UserModelState userModelState =
+        Provider.of<UserModelState>(context, listen: false);
+    userModelState.clear();
   }
 }
