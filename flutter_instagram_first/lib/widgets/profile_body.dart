@@ -15,6 +15,7 @@ class ProfileBody extends StatefulWidget {
   @override
   _ProfileBodyState createState() => _ProfileBodyState();
 }
+
 // SingleTickerProviderStateMixin 클래스는 애니메이션을 처리하기 위한 헬퍼 클래스
 // 상속에 포함시키지 않으면 컨트롤러를 생성할 수 없다.
 // mixin은 다중 상속에서 코드를 재사용하기 위한 한 가지 방법으로 with 키워드와 함께 사용
@@ -282,10 +283,13 @@ class _ProfileBodyState extends State<ProfileBody>
   }
 
   Widget _username(BuildContext context) {
+    UserModelState userModelState = Provider.of<UserModelState>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: common_gap),
       child: Text(
-        Provider.of<UserModelState>(context).userModel.username,
+        userModelState == null || userModelState.userModel == null
+            ? ""
+            : userModelState.userModel.username,
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
     );
