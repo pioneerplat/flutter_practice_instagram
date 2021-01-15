@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
 import 'package:flutter_instagram_first/repo/image_network_repository.dart';
+import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 
 class SharePostScreen extends StatelessWidget {
@@ -48,13 +49,26 @@ class SharePostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    imageNetworkRepository.uploadImageNCreateNewPost(imageFile);
     return Scaffold(
       appBar: AppBar(
         title: Text('New Post'),
         actions: <Widget>[
           FlatButton(
-            onPressed: () {},
+            onPressed: () async {
+              // 밑에 작은 박스가 나옴 //builder에는 context가 오지만 지금은 사용하지 않으니 _ 로 대체
+              showModalBottomSheet(
+                  context: context,
+                  builder: (_) => MyProgressIndicator(),
+                  // true로 하면 빈공간을 클릭해서 없앨 수 있음
+                  isDismissible: false,
+                  // ture로 하면 드래그해서 없앨 수 있음
+                  enableDrag: false);
+              //이 부분이 끝날 때까지 기다리기 위해 await를 걸어줌 (이부분이 끝나면 로딩을 종료하기 위해)
+              await imageNetworkRepository.uploadImageNCreateNewPost(imageFile);
+              //이 명령어를 주면 ModalBottomSheet 이 사라진다
+              Navigator.of(context).pop();
+
+            },
             child: Text(
               "Share",
               textScaleFactor: 1.4,
@@ -72,7 +86,9 @@ class SharePostScreen extends StatelessWidget {
           _divider,
           _sectionButton('Add Location'),
           _tags(),
-          SizedBox(height: common_s_gap,),
+          SizedBox(
+            height: common_s_gap,
+          ),
           _divider,
           SectionSwitch('Facebook'),
           SectionSwitch('Instagram'),
@@ -89,18 +105,17 @@ class SharePostScreen extends StatelessWidget {
       itemCount: _tagItems.length,
       //수평스크롤 높이
       heightHorizontalScroll: 30,
-      itemBuilder: (index) =>
-          ItemTags(
-            index: index,
-            title: _tagItems[index],
-            activeColor: Colors.grey[200],
-            textActiveColor: Colors.black87,
-            borderRadius: BorderRadius.circular(4),
-            //splashColor: Colors.grey[800],
-            color: Colors.green,
-            //그림자
-            elevation: 2,
-          ),
+      itemBuilder: (index) => ItemTags(
+        index: index,
+        title: _tagItems[index],
+        activeColor: Colors.grey[200],
+        textActiveColor: Colors.black87,
+        borderRadius: BorderRadius.circular(4),
+        //splashColor: Colors.grey[800],
+        color: Colors.green,
+        //그림자
+        elevation: 2,
+      ),
     );
   }
 
@@ -114,8 +129,7 @@ class SharePostScreen extends StatelessWidget {
   }
  */
   // 이렇게 하면 호출할 때 _divider() 이 아닌 _divider로 이름만으로 호출할 수 있게 된다
-  Divider get _divider =>
-      Divider(
+  Divider get _divider => Divider(
         color: Colors.grey[300],
         thickness: 1,
         height: 1,
@@ -133,11 +147,10 @@ class SharePostScreen extends StatelessWidget {
     );
   }
 
-
   ListTile _captionWithImage() {
     return ListTile(
       contentPadding:
-      EdgeInsets.symmetric(vertical: common_gap, horizontal: common_gap),
+          EdgeInsets.symmetric(vertical: common_gap, horizontal: common_gap),
       leading: Image.file(
         imageFile,
         width: size.width / 6,
@@ -155,7 +168,9 @@ class SharePostScreen extends StatelessWidget {
 
 class SectionSwitch extends StatefulWidget {
   final String _title;
-  const SectionSwitch(this._title,{
+
+  const SectionSwitch(
+    this._title, {
     Key key,
   }) : super(key: key);
 
@@ -165,6 +180,7 @@ class SectionSwitch extends StatefulWidget {
 
 class _SectionSwitchState extends State<SectionSwitch> {
   bool checked = false;
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
