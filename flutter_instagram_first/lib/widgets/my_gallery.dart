@@ -10,6 +10,9 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../models/user_model_state.dart';
+import '../repo/helper/generate_post_key.dart';
+
 class MyGallery extends StatefulWidget {
   @override
   _MyGalleryState createState() => _MyGalleryState();
@@ -41,11 +44,11 @@ class _MyGalleryState extends State<MyGallery> {
               onTap: () async {
                 Uint8List bytes = await localImage.getScaledImageBytes(
                     galleryState.localImageProvider, 0.3);
-                final String timeInMilli =
-                    DateTime.now().microsecondsSinceEpoch.toString();
+                final String postKey =
+                getNewPostKey(Provider.of<UserModelState>(context, listen: false).userModel);
                 try {
                   //getTemporaryDirectory()).path 저장되는 폴더 위치 , $timeInMilli.png 파일명
-                  final path = join((await getTemporaryDirectory()).path, '$timeInMilli.png');
+                  final path = join((await getTemporaryDirectory()).path, '$postKey.png');
 
                   //File(path)파일을 생성해서 .. 찍으면 뒤에 메소드를 실행하고 그 파일을 imageFile 로 리턴
                   File imageFile = File(path)..writeAsBytesSync(bytes);
@@ -53,7 +56,7 @@ class _MyGalleryState extends State<MyGallery> {
                   //화면에 사진찍은걸 보여줌
                   //(_) 원래 context를 받아와야하지만 지금은 사용하지 않기때문에 _로 대체함
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => SharePostScreen(imageFile)));
+                      builder: (_) => SharePostScreen(imageFile, postKey: postKey,)));
                 } catch (e) {}
               },
               child: Image(

@@ -11,6 +11,9 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../models/user_model_state.dart';
+import '../repo/helper/generate_post_key.dart';
+
 class TakePhoto extends StatefulWidget {
   const TakePhoto({
     Key key,
@@ -61,7 +64,7 @@ class _TakePhotoState extends State<TakePhoto> {
               //shape만 버튼
               child: OutlineButton(
                 onPressed: () {
-                  if(cameraState.isReadyToTakePhoto){
+                  if (cameraState.isReadyToTakePhoto) {
                     _attemptTakePhoto(cameraState, context);
                   }
                 },
@@ -111,12 +114,14 @@ class _TakePhotoState extends State<TakePhoto> {
 // });
   }
 
-  void _attemptTakePhoto(CameraState cameraState, BuildContext context) async{
+  void _attemptTakePhoto(CameraState cameraState, BuildContext context) async {
     // 시간을 이미지 명으로 사용하기 위해 가져온다
-    final String timeInMilli = DateTime.now().microsecondsSinceEpoch.toString();
-    try{
+    final String postKey =
+        getNewPostKey(Provider.of<UserModelState>(context, listen: false).userModel);
+    try {
       //getTemporaryDirectory()).path 저장되는 폴더 위치 , $timeInMilli.png 파일명
-      final path = join((await getTemporaryDirectory()).path, '$timeInMilli.png');
+      final path =
+          join((await getTemporaryDirectory()).path, '$postKey.png');
 
       await cameraState.controller.takePicture(path);
 
@@ -124,10 +129,11 @@ class _TakePhotoState extends State<TakePhoto> {
 
       //화면에 사진찍은걸 보여줌
       //(_) 원래 context를 받아와야하지만 지금은 사용하지 않기때문에 _로 대체함
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => SharePostScreen(imageFile)));
-
-    }catch(e){
-
-    }
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => SharePostScreen(
+                imageFile,
+                postKey: postKey,
+              )));
+    } catch (e) {}
   }
 }
