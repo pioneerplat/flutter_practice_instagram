@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_first/constants/common_size.dart';
+import 'package:flutter_instagram_first/constants/screen_size.dart';
 
 class SharePostScreen extends StatelessWidget {
   final File imageFile;
@@ -15,12 +17,33 @@ class SharePostScreen extends StatelessWidget {
         title: Text('New Post'),
         actions: <Widget>[
           FlatButton(
-            onPressed: (){},
-            child: Text("Share", textScaleFactor: 1.4, style: TextStyle(color: Colors.blue),),
+            onPressed: () {},
+            child: Text(
+              "Share",
+              textScaleFactor: 1.4,
+              style: TextStyle(color: Colors.blue),
+            ),
           )
         ],
       ),
-      body: Image.file(imageFile),
+      body: ListView(
+        children: [
+          ListTile(
+            contentPadding: EdgeInsets.symmetric(vertical: common_gap, horizontal: common_gap),
+            leading: Image.file(
+              imageFile,
+              width: size.width / 6,
+              height: size.width / 6,
+              //사이즈가 오버되는 부분은 잘라준다
+              fit: BoxFit.cover,
+            ),
+            title: TextField(
+              decoration: InputDecoration(
+                  hintText: 'Write a caption...', border: InputBorder.none),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
