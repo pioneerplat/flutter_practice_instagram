@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
@@ -68,25 +69,36 @@ class SharePostScreen extends StatelessWidget {
           _sectionButton('Tag People'),
           _divider,
           _sectionButton('Add Location'),
-          Tags(
-            horizontalScroll: true,
-            itemCount: _tagItems.length,
-            //수평스크롤 높이
-            heightHorizontalScroll: 30,
-            itemBuilder: (index) => ItemTags(
-              index: index,
-              title: _tagItems[index],
-              activeColor: Colors.grey[200],
-              textActiveColor: Colors.black87,
-              borderRadius: BorderRadius.circular(4),
-              //splashColor: Colors.grey[800],
-              color: Colors.green,
-              //그림자
-              elevation: 2,
-            ),
-          )
+          _tags(),
+          SizedBox(height: common_s_gap,),
+          _divider,
+          SectionSwitch('Facebook'),
+          SectionSwitch('Instagram'),
+          SectionSwitch('Tumblr'),
+          _divider
         ],
       ),
+    );
+  }
+
+  Tags _tags() {
+    return Tags(
+      horizontalScroll: true,
+      itemCount: _tagItems.length,
+      //수평스크롤 높이
+      heightHorizontalScroll: 30,
+      itemBuilder: (index) =>
+          ItemTags(
+            index: index,
+            title: _tagItems[index],
+            activeColor: Colors.grey[200],
+            textActiveColor: Colors.black87,
+            borderRadius: BorderRadius.circular(4),
+            //splashColor: Colors.grey[800],
+            color: Colors.green,
+            //그림자
+            elevation: 2,
+          ),
     );
   }
 
@@ -100,7 +112,8 @@ class SharePostScreen extends StatelessWidget {
   }
  */
   // 이렇게 하면 호출할 때 _divider() 이 아닌 _divider로 이름만으로 호출할 수 있게 된다
-  Divider get _divider => Divider(
+  Divider get _divider =>
+      Divider(
         color: Colors.grey[300],
         thickness: 1,
         height: 1,
@@ -118,10 +131,11 @@ class SharePostScreen extends StatelessWidget {
     );
   }
 
+
   ListTile _captionWithImage() {
     return ListTile(
       contentPadding:
-          EdgeInsets.symmetric(vertical: common_gap, horizontal: common_gap),
+      EdgeInsets.symmetric(vertical: common_gap, horizontal: common_gap),
       leading: Image.file(
         imageFile,
         width: size.width / 6,
@@ -133,6 +147,39 @@ class SharePostScreen extends StatelessWidget {
         decoration: InputDecoration(
             hintText: 'Write a caption...', border: InputBorder.none),
       ),
+    );
+  }
+}
+
+class SectionSwitch extends StatefulWidget {
+  final String _title;
+  const SectionSwitch(this._title,{
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _SectionSwitchState createState() => _SectionSwitchState();
+}
+
+class _SectionSwitchState extends State<SectionSwitch> {
+  bool checked = false;
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(
+        widget._title,
+        style: TextStyle(fontWeight: FontWeight.w400),
+      ),
+      trailing: CupertinoSwitch(
+        value: checked,
+        onChanged: (onValue) {
+          setState(() {
+            checked = onValue;
+          });
+        },
+      ),
+      dense: true,
+      contentPadding: EdgeInsets.symmetric(horizontal: common_gap),
     );
   }
 }
