@@ -64,7 +64,7 @@ class SharePostScreen extends StatelessWidget {
                   // ture로 하면 드래그해서 없앨 수 있음
                   enableDrag: false);
               //이 부분이 끝날 때까지 기다리기 위해 await를 걸어줌 (이부분이 끝나면 로딩을 종료하기 위해)
-              await imageNetworkRepository.uploadImageNCreateNewPost(imageFile);
+              await imageNetworkRepository.uploadImageNCreateNewPost(imageFile, postKey: postKey);
               //이 명령어를 주면 ModalBottomSheet 이 사라진다
               Navigator.of(context).pop();
 
