@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
+import 'package:flutter_instagram_first/repo/image_network_repository.dart';
 import 'package:flutter_instagram_first/widgets/comment.dart';
 import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 import 'package:flutter_instagram_first/widgets/rounded_avatar.dart';
@@ -10,8 +11,7 @@ class Post extends StatelessWidget {
   final int index;
 
 
-  Post(
-    this.index, {
+  Post(this.index, {
     Key key,
   }) : super(key: key);
 
@@ -22,7 +22,6 @@ class Post extends StatelessWidget {
 //      color: Colors.accents[index % Colors.accents.length],
 //      height: 100,
 //    );
-
 
 
     //CashedNetworkImage는 이미지를 디바이스에 저장해놓은 후 다시 돌아왔을때 다운받은 이미지를 사용한다.
@@ -113,33 +112,46 @@ class Post extends StatelessWidget {
     );
   }
 
-  CachedNetworkImage _postImage() {
-    return CachedNetworkImage(
-        //가로200 세로300
-        imageUrl: 'https://picsum.photos/id/$index/200/200',
+  Widget _postImage() {
 
-        //Url에서 이미지를 불러 오는 동안 loading시간에 할일 설정
-        placeholder: (BuildContext context, String url) {
-          return MyProgressIndicator(
-            containerSize: size.width,
-          );
-        },
+    Widget progress = MyProgressIndicator(
+      containerSize: size.width,
+    );
 
-        //위 Url에서 다운받은 이미지를 imageProvider를 통해서 가져온다.
-        imageBuilder: (
-          BuildContext context,
-          ImageProvider imageProvider,
-        ) {
-          return AspectRatio(
-            // 이미지 가로 세로의 비를 1로
-            aspectRatio: 1,
+    return FutureBuilder<dynamic>(
+        future: imageNetworkRepository.getPostImageUrl(
+            '1610731090978_ECerRKrRCCVJyMkHTbqnCprx9Nl1'
+        ),
+        builder: (context, snapshot) {
+          if(snapshot.hasData)
+          return CachedNetworkImage(
+            //가로200 세로300
+              imageUrl: snapshot.data.toString(),
 
-            child: Container(
-              decoration: BoxDecoration(
-                  image:
-                      DecorationImage(image: imageProvider, fit: BoxFit.cover)),
-            ),
-          );
-        });
+              //Url에서 이미지를 불러 오는 동안 loading시간에 할일 설정
+              placeholder: (BuildContext context, String url) {
+                return progress;
+              },
+
+              //위 Url에서 다운받은 이미지를 imageProvider를 통해서 가져온다.
+              imageBuilder: (BuildContext context,
+                  ImageProvider imageProvider,) {
+                return AspectRatio(
+                  // 이미지 가로 세로의 비를 1로
+                  aspectRatio: 1,
+
+                  child: Container(
+                    decoration: BoxDecoration(
+                        image:
+                        DecorationImage(
+                            image: imageProvider, fit: BoxFit.cover)),
+                  ),
+                );
+              });
+          else {
+            return progress;
+          }
+        }
+    );
   }
 }
