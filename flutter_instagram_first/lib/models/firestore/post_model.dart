@@ -25,14 +25,14 @@ class PostModel {
         caption = map[KEY_CAPTION],
         lastCommentor = map[KEY_LASTCOMMENTOR],
         lastComment = map[KEY_LASTCOMMENT],
-        //KEY_LASTCOMMENTTIME 값이 없을 때 에러가 나기 때문에 (값이 없으면 데이터 값을 지금 시간으로 넣어준다)
+  //KEY_LASTCOMMENTTIME 값이 없을 때 에러가 나기 때문에 (값이 없으면 데이터 값을 지금 시간으로 넣어준다)
         lastCommentTime = map[KEY_LASTCOMMENTTIME] == null
             ? DateTime.now().toUtc()
             : (map[KEY_LASTCOMMENTTIME] as Timestamp).toDate(),
         numOfComments = map[KEY_NUMOFCOMMENTS],
-        postTime = map[KEY_POSTTIME]==null
-          ? DateTime.now().toUtc()
-          : (map[KEY_POSTTIME]).toDate();
+        postTime = map[KEY_POSTTIME] == null
+            ? DateTime.now().toUtc()
+            : (map[KEY_POSTTIME]).toDate();
 
   //fromSnapshot - cloud_firestore.dart언어 (각각의 document를 snapshot으로 보면 됨
   PostModel.fromSnapshot(DocumentSnapshot snapshot)
@@ -42,18 +42,18 @@ class PostModel {
       reference: snapshot.reference
   );
 
-  static Map<String, dynamic> getMapForCreatePost(String userKey, String username, String caption) {
+  static Map<String, dynamic> getMapForCreatePost({String userKey, String username, String caption}) {
     Map<String, dynamic> map = Map();
     map[KEY_USERKEY] = userKey;
     map[KEY_USERNAME] = username;
-    map[KEY_POSTIMG] = postImg;
-    map[KEY_NUMOFLIKES] = numOflikes;
+    map[KEY_POSTIMG] = "";
+    map[KEY_NUMOFLIKES] = [];
     map[KEY_CAPTION] = caption;
-    map[KEY_LASTCOMMENTOR] = lastCommentor;
-    map[KEY_LASTCOMMENT] = lastComment;
-    map[KEY_LASTCOMMENTTIME] = lastCommentTime;
-    map[KEY_NUMOFCOMMENTS] = numOfComments;
-    map[KEY_POSTTIME] = postTime;
+    map[KEY_LASTCOMMENTOR] = "";
+    map[KEY_LASTCOMMENT] = "";
+    map[KEY_LASTCOMMENTTIME] = DateTime.now().toUtc();
+    map[KEY_NUMOFCOMMENTS] = 0;
+    map[KEY_POSTTIME] = DateTime.now().toUtc();
     return map;
   }
 }

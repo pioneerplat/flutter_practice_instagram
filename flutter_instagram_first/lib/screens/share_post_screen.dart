@@ -3,9 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
+import 'package:flutter_instagram_first/models/firestore/post_model.dart';
+import 'package:flutter_instagram_first/models/firestore/user_model.dart';
+import 'package:flutter_instagram_first/models/user_model_state.dart';
 import 'package:flutter_instagram_first/repo/image_network_repository.dart';
+import 'package:flutter_instagram_first/repo/post_network_repository.dart';
 import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:provider/provider.dart';
 
 class SharePostScreen extends StatelessWidget {
   final File imageFile;
@@ -64,10 +69,18 @@ class SharePostScreen extends StatelessWidget {
                   // ture로 하면 드래그해서 없앨 수 있음
                   enableDrag: false);
               //이 부분이 끝날 때까지 기다리기 위해 await를 걸어줌 (이부분이 끝나면 로딩을 종료하기 위해)
-              await imageNetworkRepository.uploadImageNCreateNewPost(imageFile, postKey: postKey);
+              await imageNetworkRepository.uploadImage(imageFile,
+                  postKey: postKey);
               //이 명령어를 주면 ModalBottomSheet 이 사라진다
-              Navigator.of(context).pop();
 
+              UserModel usermodel =
+                  Provider.of<UserModelState>(context, listen: false).userModel;
+
+              await postNetworkRepository.createNewPost(
+                  postKey,
+                  PostModel.getMapForCreatePost(
+                      userKey: usermodel.userKey, username: usermodel.username, caption: ));
+              Navigator.of(context).pop();
             },
             child: Text(
               "Share",

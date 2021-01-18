@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_instagram_first/repo/helper/image_helper.dart';
 
 class ImageNetworkRepository {
-  Future<StorageTaskSnapshot> uploadImageNCreateNewPost(File originImage, {@required String postKey}) async {
+  Future<StorageTaskSnapshot> uploadImage(File originImage, {@required String postKey}) async {
     try {
       final File resized = await compute(getResizedImage, originImage);
       //postKey를 받아와서 reference를 형성을 한다
