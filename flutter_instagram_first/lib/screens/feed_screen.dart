@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_instagram_first/models/firestore/user_model.dart';
 import 'package:flutter_instagram_first/models/user_model_state.dart';
 import 'package:flutter_instagram_first/repo/user_network_repository.dart';
 import 'package:flutter_instagram_first/widgets/post.dart';
@@ -51,7 +52,10 @@ class FeedScreen extends StatelessWidget {
                 AssetImage('assets/images/direct_message.png'),
                 color: Colors.black87,
               ),
-              onPressed: () {
+              onPressed: ()  {
+                userNetworkRepository.getAllUsersWithoutMe().listen((users) {
+                  print(users);
+                });
                 //Provider.of<UserModelState>(context, listen: false).clear();
               },
             )

@@ -23,8 +23,14 @@ class UserNetworkRepository with Transformers {
     //UserModel로 변화를 시켜준다
     return Firestore.instance.collection(COLLECTION_USERS)
         .document(userKey).snapshots().transform(toUser);
+  }
 
-
+  //모든 유저 리스트 가져오기
+  Stream<List<UserModel>> getAllUsersWithoutMe() {
+    //snapshots이 Users 콜렉션에 있는 모든 유저들을 의미
+    return Firestore.instance.collection(COLLECTION_USERS)
+        .snapshots()
+        .transform(toUsersExceptMe);
   }
 }
 
