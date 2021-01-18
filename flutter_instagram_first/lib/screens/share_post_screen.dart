@@ -24,7 +24,6 @@ class SharePostScreen extends StatefulWidget {
 }
 
 class _SharePostScreenState extends State<SharePostScreen> {
-
   TextEditingController _textEditingController = TextEditingController();
 
   List<String> _tagItems = [
@@ -73,38 +72,7 @@ class _SharePostScreenState extends State<SharePostScreen> {
         title: Text('New Post'),
         actions: <Widget>[
           FlatButton(
-            onPressed: () async {
-              // 밑에 작은 박스가 나옴 //builder에는 context가 오지만 지금은 사용하지 않으니 _ 로 대체
-              showModalBottomSheet(
-                  context: context,
-                  builder: (_) => MyProgressIndicator(),
-                  // true로 하면 빈공간을 클릭해서 없앨 수 있음
-                  isDismissible: false,
-                  // ture로 하면 드래그해서 없앨 수 있음
-                  enableDrag: false);
-              //이 부분이 끝날 때까지 기다리기 위해 await를 걸어줌 (이부분이 끝나면 로딩을 종료하기 위해)
-              await imageNetworkRepository.uploadImage(widget.imageFile,
-                  postKey: widget.postKey);
-              //이 명령어를 주면 ModalBottomSheet 이 사라진다
-
-              UserModel usermodel =
-                  Provider
-                      .of<UserModelState>(context, listen: false)
-                      .userModel;
-
-              await postNetworkRepository.createNewPost(
-                  widget.postKey,
-                  PostModel.getMapForCreatePost(
-                      userKey: usermodel.userKey,
-                      username: usermodel.username,
-                      caption: _textEditingController.text));
-              //Navigator.of(context).pop(); 은 이전화면으로 되돌아가는 Stack 에서 push 와 pop기능
-              //dismiss progress(Model Bottom Sheet) 인디케이터가 사라지게 함
-              Navigator.of(context).pop();
-              //이 화면에서 나가게한다
-              Navigator.of(context).pop();
-
-            },
+            onPressed: sharePostProcedure,
             child: Text(
               "Share",
               textScaleFactor: 1.4,
@@ -135,29 +103,65 @@ class _SharePostScreenState extends State<SharePostScreen> {
     );
   }
 
+  void sharePostProcedure() async {
+      // 밑에 작은 박스가 나옴 //builder에는 context가 오지만 지금은 사용하지 않으니 _ 로 대체
+      showModalBottomSheet(
+          context: context,
+          builder: (_) => MyProgressIndicator(),
+          // true로 하면 빈공간을 클릭해서 없앨 수 있음
+          isDismissible: false,
+          // ture로 하면 드래그해서 없앨 수 있음
+          enableDrag: false);
+      //이 부분이 끝날 때까지 기다리기 위해 await를 걸어줌 (이부분이 끝나면 로딩을 종료하기 위해)
+      await imageNetworkRepository.uploadImage(widget.imageFile,
+          postKey: widget.postKey);
+      //이 명령어를 주면 ModalBottomSheet 이 사라진다
+
+      UserModel usermodel =
+          Provider.of<UserModelState>(context, listen: false).userModel;
+
+      await postNetworkRepository.createNewPost(
+          widget.postKey,
+          PostModel.getMapForCreatePost(
+              userKey: usermodel.userKey,
+              username: usermodel.username,
+              caption: _textEditingController.text));
+
+      String postImgLink =
+      await imageNetworkRepository.getPostImageUrl(widget.postKey);
+
+      await postNetworkRepository.updatePostImageUrl(
+          postKey: widget.postKey, postImg: postImgLink);
+
+      //Navigator.of(context).pop(); 은 이전화면으로 되돌아가는 Stack 에서 push 와 pop기능
+      //dismiss progress(Model Bottom Sheet) 인디케이터가 사라지게 함
+      Navigator.of(context).pop();
+      //이 화면에서 나가게한다
+      Navigator.of(context).pop();
+    }
+
+
   Tags _tags() {
     return Tags(
       horizontalScroll: true,
       itemCount: _tagItems.length,
       //수평스크롤 높이
       heightHorizontalScroll: 30,
-      itemBuilder: (index) =>
-          ItemTags(
-            index: index,
-            title: _tagItems[index],
-            activeColor: Colors.grey[200],
-            textActiveColor: Colors.black87,
-            borderRadius: BorderRadius.circular(4),
-            //splashColor: Colors.grey[800],
-            color: Colors.green,
-            //그림자
-            elevation: 2,
-          ),
+      itemBuilder: (index) => ItemTags(
+        index: index,
+        title: _tagItems[index],
+        activeColor: Colors.grey[200],
+        textActiveColor: Colors.black87,
+        borderRadius: BorderRadius.circular(4),
+        //splashColor: Colors.grey[800],
+        color: Colors.green,
+        //그림자
+        elevation: 2,
+      ),
     );
   }
 
-  Divider get _divider =>
-      Divider(
+  Divider get _divider => Divider(
         color: Colors.grey[300],
         thickness: 1,
         height: 1,
@@ -178,7 +182,7 @@ class _SharePostScreenState extends State<SharePostScreen> {
   ListTile _captionWithImage() {
     return ListTile(
       contentPadding:
-      EdgeInsets.symmetric(vertical: common_gap, horizontal: common_gap),
+          EdgeInsets.symmetric(vertical: common_gap, horizontal: common_gap),
       leading: Image.file(
         widget.imageFile,
         width: size.width / 6,
@@ -200,7 +204,8 @@ class _SharePostScreenState extends State<SharePostScreen> {
 class SectionSwitch extends StatefulWidget {
   final String _title;
 
-  const SectionSwitch(this._title, {
+  const SectionSwitch(
+    this._title, {
     Key key,
   }) : super(key: key);
 

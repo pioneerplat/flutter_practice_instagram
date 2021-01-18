@@ -6,7 +6,7 @@ class PostModel {
   final String userKey;
   final String username;
   final String postImg;
-  final List<dynamic> numOflikes;
+  final List<dynamic> numOfLikes;
   final String caption;
   final String lastCommentor; // 마지막으로 comment한 사람의 user ID
   final String lastComment;
@@ -21,7 +21,7 @@ class PostModel {
         userKey = map[KEY_USERKEY],
         username = map[KEY_USERNAME],
         postImg = map[KEY_POSTIMG],
-        numOflikes = map[KEY_NUMOFLIKES],
+        numOfLikes = map[KEY_NUMOFLIKES],
         caption = map[KEY_CAPTION],
         lastCommentor = map[KEY_LASTCOMMENTOR],
         lastComment = map[KEY_LASTCOMMENT],
@@ -32,7 +32,7 @@ class PostModel {
         numOfComments = map[KEY_NUMOFCOMMENTS],
         postTime = map[KEY_POSTTIME] == null
             ? DateTime.now().toUtc()
-            : (map[KEY_POSTTIME]).toDate();
+            : (map[KEY_POSTTIME] as Timestamp).toDate();
 
   //fromSnapshot - cloud_firestore.dart언어 (각각의 document를 snapshot으로 보면 됨
   PostModel.fromSnapshot(DocumentSnapshot snapshot)

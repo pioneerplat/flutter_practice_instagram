@@ -19,11 +19,12 @@ class UserNetworkRepository with Transformers {
   Stream<UserModel> getUserModelStream(String userKey) {
     // .get()을 하면 1번만 가지고오고 ,
     // .snapshots을 하면 stream을 보내주기 때문에 정보가 변할 때마다 보내준다.
-    return Firestore.instance.collection(COLLECTION_USERS)
-        .document(userKey)
     //snapshots stream을 받아와서 그 stream에서 던져주는 각각의 DocumentSnapshot을
     //UserModel로 변화를 시켜준다
-        .snapshots().transform(toUser);
+    return Firestore.instance.collection(COLLECTION_USERS)
+        .document(userKey).snapshots().transform(toUser);
+
+
   }
 }
 

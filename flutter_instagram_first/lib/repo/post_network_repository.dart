@@ -6,14 +6,15 @@ class PostNetworkRepository {
       String postKey, Map<String, dynamic> postData) async {
     //해당 document의 reference 가져오기
     final DocumentReference postRef =
-        Firestore.instance.collection(COLLECTION_POST).document(postKey);
-    //user reference 가져오기
+        Firestore.instance.collection(COLLECTION_POSTS).document(postKey);
+
 
     //reference를 통해서 snapshot을 가져옴
     final DocumentSnapshot postSnapshot = await postRef.get();
 
+    //user reference 가져오기
     final DocumentReference userRef = Firestore.instance
-        .collection(COLLECTION_POST)
+        .collection(COLLECTION_USERS)
         .document(postData[KEY_USERKEY]);
 
     //업데이트 둘 중 하나라도 실패하면 이전 상태로 되돌아간다
@@ -21,7 +22,6 @@ class PostNetworkRepository {
       //snapshot이 존재하는지 물어본다
       if (!postSnapshot.exists) {
         await tx.set(postRef, postData);
-
         //그냥 외우자 arrayUnion : array안에 추가를 하라는 뜻
         await tx.update(userRef, {
           KEY_MYPOSTS: FieldValue.arrayUnion([postKey])
@@ -29,6 +29,17 @@ class PostNetworkRepository {
       }
     });
   }
+
+  Future<void> updatePostImageUrl({String postImg, String postKey}) async {
+    final DocumentReference postRef =
+    Firestore.instance.collection(COLLECTION_POSTS).document(postKey);
+    final DocumentSnapshot postSnapshot = await postRef.get();
+
+    if (postSnapshot.exists) {
+      await postRef.updateData({KEY_POSTIMG: postImg});
+    }
+  }
+
 }
 
 PostNetworkRepository postNetworkRepository = PostNetworkRepository();
