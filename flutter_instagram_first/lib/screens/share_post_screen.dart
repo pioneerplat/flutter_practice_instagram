@@ -12,12 +12,20 @@ import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:provider/provider.dart';
 
-class SharePostScreen extends StatelessWidget {
+class SharePostScreen extends StatefulWidget {
   final File imageFile;
   final String postKey;
 
   SharePostScreen(this.imageFile, {Key key, @required this.postKey})
       : super(key: key);
+
+  @override
+  _SharePostScreenState createState() => _SharePostScreenState();
+}
+
+class _SharePostScreenState extends State<SharePostScreen> {
+
+  TextEditingController _textEditingController = TextEditingController();
 
   List<String> _tagItems = [
     "approval",
@@ -53,6 +61,12 @@ class SharePostScreen extends StatelessWidget {
   ];
 
   @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -69,18 +83,27 @@ class SharePostScreen extends StatelessWidget {
                   // ture로 하면 드래그해서 없앨 수 있음
                   enableDrag: false);
               //이 부분이 끝날 때까지 기다리기 위해 await를 걸어줌 (이부분이 끝나면 로딩을 종료하기 위해)
-              await imageNetworkRepository.uploadImage(imageFile,
-                  postKey: postKey);
+              await imageNetworkRepository.uploadImage(widget.imageFile,
+                  postKey: widget.postKey);
               //이 명령어를 주면 ModalBottomSheet 이 사라진다
 
               UserModel usermodel =
-                  Provider.of<UserModelState>(context, listen: false).userModel;
+                  Provider
+                      .of<UserModelState>(context, listen: false)
+                      .userModel;
 
               await postNetworkRepository.createNewPost(
-                  postKey,
+                  widget.postKey,
                   PostModel.getMapForCreatePost(
-                      userKey: usermodel.userKey, username: usermodel.username, caption: ));
+                      userKey: usermodel.userKey,
+                      username: usermodel.username,
+                      caption: _textEditingController.text));
+              //Navigator.of(context).pop(); 은 이전화면으로 되돌아가는 Stack 에서 push 와 pop기능
+              //dismiss progress(Model Bottom Sheet) 인디케이터가 사라지게 함
               Navigator.of(context).pop();
+              //이 화면에서 나가게한다
+              Navigator.of(context).pop();
+
             },
             child: Text(
               "Share",
@@ -118,31 +141,23 @@ class SharePostScreen extends StatelessWidget {
       itemCount: _tagItems.length,
       //수평스크롤 높이
       heightHorizontalScroll: 30,
-      itemBuilder: (index) => ItemTags(
-        index: index,
-        title: _tagItems[index],
-        activeColor: Colors.grey[200],
-        textActiveColor: Colors.black87,
-        borderRadius: BorderRadius.circular(4),
-        //splashColor: Colors.grey[800],
-        color: Colors.green,
-        //그림자
-        elevation: 2,
-      ),
+      itemBuilder: (index) =>
+          ItemTags(
+            index: index,
+            title: _tagItems[index],
+            activeColor: Colors.grey[200],
+            textActiveColor: Colors.black87,
+            borderRadius: BorderRadius.circular(4),
+            //splashColor: Colors.grey[800],
+            color: Colors.green,
+            //그림자
+            elevation: 2,
+          ),
     );
   }
 
-/*
-  Divider _divider() {
-    return Divider(
-          color: Colors.grey[300],
-          thickness: 1,
-          height: 1,
-        );
-  }
- */
-  // 이렇게 하면 호출할 때 _divider() 이 아닌 _divider로 이름만으로 호출할 수 있게 된다
-  Divider get _divider => Divider(
+  Divider get _divider =>
+      Divider(
         color: Colors.grey[300],
         thickness: 1,
         height: 1,
@@ -163,15 +178,18 @@ class SharePostScreen extends StatelessWidget {
   ListTile _captionWithImage() {
     return ListTile(
       contentPadding:
-          EdgeInsets.symmetric(vertical: common_gap, horizontal: common_gap),
+      EdgeInsets.symmetric(vertical: common_gap, horizontal: common_gap),
       leading: Image.file(
-        imageFile,
+        widget.imageFile,
         width: size.width / 6,
         height: size.width / 6,
         //사이즈가 오버되는 부분은 잘라준다
         fit: BoxFit.cover,
       ),
       title: TextField(
+        //share_post_screen에 왔을 때 이 TextField에 자동으로 커서가 오게 한다
+        autofocus: true,
+        controller: _textEditingController,
         decoration: InputDecoration(
             hintText: 'Write a caption...', border: InputBorder.none),
       ),
@@ -182,8 +200,7 @@ class SharePostScreen extends StatelessWidget {
 class SectionSwitch extends StatefulWidget {
   final String _title;
 
-  const SectionSwitch(
-    this._title, {
+  const SectionSwitch(this._title, {
     Key key,
   }) : super(key: key);
 
