@@ -11,8 +11,8 @@ import 'package:flutter_instagram_first/widgets/rounded_avatar.dart';
 class Post extends StatelessWidget {
   final PostModel postModel;
 
-
-  Post(this.postModel, {
+  Post(
+    this.postModel, {
     Key key,
   }) : super(key: key);
 
@@ -24,7 +24,6 @@ class Post extends StatelessWidget {
 //      height: 100,
 //    );
 
-
     //CashedNetworkImage는 이미지를 디바이스에 저장해놓은 후 다시 돌아왔을때 다운받은 이미지를 사용한다.
     //pub.dev에서 Installing-> dependencies에서 복사 -> pupspec.yaml에 붙여넣은다음 import해서 사
     return Column(
@@ -35,6 +34,7 @@ class Post extends StatelessWidget {
         _postActions(),
         _postLikes(),
         _postCaption(),
+        _lastComment()
       ],
     );
   }
@@ -46,8 +46,21 @@ class Post extends StatelessWidget {
           horizontal: common_gap, vertical: common_xxs_gap),
       child: Comment(
         showImage: false,
-        username: 'testingUser',
-        text: 'I have money!!!',
+        username: postModel.username,
+        text: postModel.caption,
+      ),
+    );
+  }
+
+  Widget _lastComment() {
+    //하나의 Text안에 여러가지 style이 있을때 RichText를 사용
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          horizontal: common_gap, vertical: common_xxs_gap),
+      child: Comment(
+        showImage: false,
+        username: postModel.lastCommentor,
+        text: postModel.lastComment,
       ),
     );
   }
@@ -56,7 +69,7 @@ class Post extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: common_gap),
       child: Text(
-        '12000 likes',
+        '${postModel.numOfLikes == null ? 0 : postModel.numOfLikes.length} likes',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
     );
@@ -100,7 +113,7 @@ class Post extends StatelessWidget {
           child: RoundedAvatar(),
         ),
         //Expanded 위젯으로 감싸주면 이미지와 IconButton의 공간을 제외한 나머지 공간을 Text로 채울수 있다.
-        Expanded(child: Text('username')),
+        Expanded(child: Text(postModel.username)),
 
         IconButton(
             icon: Icon(
@@ -114,45 +127,33 @@ class Post extends StatelessWidget {
   }
 
   Widget _postImage() {
-
     Widget progress = MyProgressIndicator(
       containerSize: size.width,
     );
+    return CachedNetworkImage(
+        //가로200 세로300
+        imageUrl: postModel.postImg,
 
-    return FutureBuilder<dynamic>(
-        future: imageNetworkRepository.getPostImageUrl(
-            '1610731090978_ECerRKrRCCVJyMkHTbqnCprx9Nl1'
-        ),
-        builder: (context, snapshot) {
-          if(snapshot.hasData)
-          return CachedNetworkImage(
-            //가로200 세로300
-              imageUrl: snapshot.data.toString(),
+        //Url에서 이미지를 불러 오는 동안 loading시간에 할일 설정
+        placeholder: (BuildContext context, String url) {
+          return progress;
+        },
 
-              //Url에서 이미지를 불러 오는 동안 loading시간에 할일 설정
-              placeholder: (BuildContext context, String url) {
-                return progress;
-              },
+        //위 Url에서 다운받은 이미지를 imageProvider를 통해서 가져온다.
+        imageBuilder: (
+          BuildContext context,
+          ImageProvider imageProvider,
+        ) {
+          return AspectRatio(
+            // 이미지 가로 세로의 비를 1로
+            aspectRatio: 1,
 
-              //위 Url에서 다운받은 이미지를 imageProvider를 통해서 가져온다.
-              imageBuilder: (BuildContext context,
-                  ImageProvider imageProvider,) {
-                return AspectRatio(
-                  // 이미지 가로 세로의 비를 1로
-                  aspectRatio: 1,
-
-                  child: Container(
-                    decoration: BoxDecoration(
-                        image:
-                        DecorationImage(
-                            image: imageProvider, fit: BoxFit.cover)),
-                  ),
-                );
-              });
-          else {
-            return progress;
-          }
-        }
-    );
+            child: Container(
+              decoration: BoxDecoration(
+                  image:
+                      DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+            ),
+          );
+        });
   }
 }
