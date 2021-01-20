@@ -10,15 +10,15 @@ import 'package:flutter_instagram_first/widgets/post.dart';
 import 'package:provider/provider.dart';
 
 class FeedScreen extends StatelessWidget {
-  final List<dynamic> followers;
+  final List<dynamic> followings;
 
-  const FeedScreen(this.followers, {Key key}) : super(key: key);
+  const FeedScreen(this.followings, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<PostModel>>(
       create: (BuildContext context) {
-        return postNetworkRepository.fetchPostsFromAllFollowers(followers);
+        return postNetworkRepository.fetchPostsFromAllFollowers(followings);
       },
       child: Consumer<List<PostModel>>(
           builder: (BuildContext context, List<PostModel> posts, Widget child) {

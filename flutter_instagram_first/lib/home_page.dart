@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
+import 'package:flutter_instagram_first/models/user_model_state.dart';
 import 'package:flutter_instagram_first/screens/camera_screen.dart';
 import 'package:flutter_instagram_first/screens/feed_screen.dart';
 import 'package:flutter_instagram_first/screens/profile_screens.dart';
 import 'package:flutter_instagram_first/screens/search_screen.dart';
+import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -31,7 +34,17 @@ class _HomePageState extends State<HomePage> {
   GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
 
   static List<Widget> _screens = <Widget>[
-    FeedScreen(),
+    Consumer<UserModelState>(
+        builder: (BuildContext context, UserModelState userModelState, Widget child) {
+          if(userModelState == null
+          || userModelState.userModel == null
+          || userModelState.userModel.followings == null
+          || userModelState.userModel.followings.isEmpty)
+            return MyProgressIndicator();
+          else
+          return FeedScreen(userModelState.userModel.followings);
+        },
+    ),
     SearchScreen(),
     Container(
       color: Colors.black,
@@ -46,7 +59,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     if (size == null) {
       //우리가 사용하고있는 디바이스의 사이즈
-      size = MediaQuery.of(context).size;
+      size = MediaQuery
+          .of(context)
+          .size;
     }
     return Scaffold(
       key: _key,
@@ -73,7 +88,7 @@ class _HomePageState extends State<HomePage> {
       case 2:
         _openCamera();
         break;
-      //case로 선택된 index말고 다른값이 들어오면
+    //case로 선택된 index말고 다른값이 들어오면
       default:
         {
           print(index);
@@ -115,9 +130,7 @@ class _HomePageState extends State<HomePage> {
       Permission.camera,
       Permission.microphone,
       // 만약 IOS 면 photos로주고 안드로이드면 storage로 준다
-      Platform.isIOS ?
-      Permission.photos:
-      Permission.storage
+      Platform.isIOS ? Permission.photos : Permission.storage
     ].request();
     bool permitted = true;
 

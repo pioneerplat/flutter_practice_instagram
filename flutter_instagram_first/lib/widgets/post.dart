@@ -2,16 +2,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
+import 'package:flutter_instagram_first/models/firestore/post_model.dart';
 import 'package:flutter_instagram_first/repo/image_network_repository.dart';
 import 'package:flutter_instagram_first/widgets/comment.dart';
 import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 import 'package:flutter_instagram_first/widgets/rounded_avatar.dart';
 
 class Post extends StatelessWidget {
-  final int index;
+  final PostModel postModel;
 
 
-  Post(this.index, {
+  Post(this.postModel, {
     Key key,
   }) : super(key: key);
 

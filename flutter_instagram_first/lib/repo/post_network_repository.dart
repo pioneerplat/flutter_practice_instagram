@@ -52,14 +52,14 @@ class PostNetworkRepository with Transformers {
         .transform(toPosts);
   }
 
-  Stream<List<PostModel>> fetchPostsFromAllFollowers(List<dynamic> followers) {
+  Stream<List<PostModel>> fetchPostsFromAllFollowers(List<dynamic> followings) {
     final CollectionReference collectionReference =
         Firestore.instance.collection(COLLECTION_POSTS);
     List<Stream<List<PostModel>>> streams = [];
-    for (final follower in followers) {
+    for (final followings in followings) {
       //해당 followers에서 userkey가 매치되는 포스트들만 가지고 온다
       streams.add(collectionReference
-          .where(KEY_USERKEY, isEqualTo: follower)
+          .where(KEY_USERKEY, isEqualTo: followings)
           //스트림을 생성
           .snapshots()
           //스트림이 도착을 할 때 toPosts를 이용해서 QuerySnapshot을 List<PostModel>로 변경 해줌
