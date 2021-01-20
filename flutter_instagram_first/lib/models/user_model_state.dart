@@ -26,4 +26,9 @@ class UserModelState extends ChangeNotifier {
     _currentStreamSub = null;
     _userModel = null;
   }
+
+  bool amIFollowingThisUser(String otherUserKey){
+    //다른 유저의 키를 가지고 있으면 내가 그 사람을 following하고 있는거
+    return _userModel.followings.contains(otherUserKey);
+  }
 }
