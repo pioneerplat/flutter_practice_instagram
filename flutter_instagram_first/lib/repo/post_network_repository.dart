@@ -39,7 +39,10 @@ class PostNetworkRepository {
       await postRef.updateData({KEY_POSTIMG: postImg});
     }
   }
-
+  Stream<void> getPostsFromSpecificUser(String userKey) {
+    // where은 컬렉션 안에서 where이하에 일치하는 부분만 가지고 오겠다
+    return Firestore.instance.collection(COLLECTION_POSTS).where(KEY_USERKEY, isEqualTo: userKey)
+  }
 }
 
 PostNetworkRepository postNetworkRepository = PostNetworkRepository();
