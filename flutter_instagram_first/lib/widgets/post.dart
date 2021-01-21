@@ -35,7 +35,8 @@ class Post extends StatelessWidget {
         _postActions(context),
         _postLikes(),
         _postCaption(),
-        _lastComment()
+        _lastComment(),
+        _moreComments(context)
       ],
     );
   }
@@ -56,8 +57,8 @@ class Post extends StatelessWidget {
   Widget _lastComment() {
     //하나의 Text안에 여러가지 style이 있을때 RichText를 사용
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: common_gap, vertical: common_xxs_gap),
+      padding: const EdgeInsets.only(
+          left: common_gap, right: common_gap, top: common_xxs_gap),
       child: Comment(
         showImage: false,
         username: postModel.lastCommentor,
@@ -86,12 +87,7 @@ class Post extends StatelessWidget {
         IconButton(
             icon: ImageIcon(AssetImage('assets/images/comment.png')),
             color: Colors.black87,
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return CommentsScreen(postModel.postKey);
-              }));
-            }),
+            onPressed: (){_goToComments(context);}),
         IconButton(
             icon: ImageIcon(AssetImage('assets/images/direct_message.png')),
             color: Colors.black87,
@@ -161,5 +157,28 @@ class Post extends StatelessWidget {
             ),
           );
         });
+  }
+
+  Widget _moreComments(BuildContext context) {
+    return Visibility(
+      // 댓글이 없거나 1개 이하일때는 보이지 않게 하기 위해
+      visible: (postModel.numOfComments != null && postModel.numOfComments > 1),
+      child: GestureDetector(
+        onTap: () {
+          _goToComments(context);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: common_gap),
+          child: Text("${postModel.numOfComments - 1} more comments..."),
+        ),
+      ),
+    );
+  }
+
+  _goToComments(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (BuildContext context) {
+      return CommentsScreen(postModel.postKey);
+    }));
   }
 }
