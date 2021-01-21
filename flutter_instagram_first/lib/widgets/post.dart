@@ -4,6 +4,7 @@ import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
 import 'package:flutter_instagram_first/models/firestore/post_model.dart';
 import 'package:flutter_instagram_first/repo/image_network_repository.dart';
+import 'package:flutter_instagram_first/screens/comments_screen.dart';
 import 'package:flutter_instagram_first/widgets/comment.dart';
 import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 import 'package:flutter_instagram_first/widgets/rounded_avatar.dart';
@@ -31,7 +32,7 @@ class Post extends StatelessWidget {
       children: <Widget>[
         _postHeader(),
         _postImage(),
-        _postActions(),
+        _postActions(context),
         _postLikes(),
         _postCaption(),
         _lastComment()
@@ -75,7 +76,7 @@ class Post extends StatelessWidget {
     );
   }
 
-  Row _postActions() {
+  Row _postActions(BuildContext context) {
     return Row(
       children: <Widget>[
         IconButton(
@@ -85,7 +86,12 @@ class Post extends StatelessWidget {
         IconButton(
             icon: ImageIcon(AssetImage('assets/images/comment.png')),
             color: Colors.black87,
-            onPressed: null),
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return CommentsScreen();
+              }));
+            }),
         IconButton(
             icon: ImageIcon(AssetImage('assets/images/direct_message.png')),
             color: Colors.black87,
