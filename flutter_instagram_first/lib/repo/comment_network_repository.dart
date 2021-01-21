@@ -42,3 +42,5 @@ class CommentNetworkRepository with Transformers {
         .snapshots().transform(toComments);
   }
 }
+
+CommentNetworkRepository commentNetworkRepository = CommentNetworkRepository();
