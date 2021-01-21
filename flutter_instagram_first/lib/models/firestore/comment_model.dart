@@ -34,6 +34,6 @@ class CommentModel {
     map[KEY_COMMENT] = comment;
     map[KEY_COMMENTTIME] = DateTime.now().toUtc();
     return map;
-    
+
   }
 }
