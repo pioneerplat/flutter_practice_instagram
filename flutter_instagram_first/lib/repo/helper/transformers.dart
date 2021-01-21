@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_instagram_first/models/firestore/comment_model.dart';
 import 'package:flutter_instagram_first/models/firestore/post_model.dart';
 import 'package:flutter_instagram_first/models/firestore/user_model.dart';
 
@@ -36,6 +37,18 @@ class Transformers {
     });
     //QuerySnapshot이 도착할 때마다 유저리스트를 생성해서 싱크대를 통해서 나가게 되어있다.
     sink.add(posts);
+  });
+
+  //documentsSnapshot을 CommentModel로 변경을 해준다음 List로 모아서 sink로 보내준다
+  final toComments =
+      StreamTransformer<QuerySnapshot, List<CommentModel>>.fromHandlers(
+          handleData: (snapshot, sink) async {
+    List<CommentModel> comments = [];
+    snapshot.documents.forEach((documentSnapshot) {
+      comments.add(CommentModel.fromSnapshot(documentSnapshot));
+    });
+    //QuerySnapshot이 도착할 때마다 유저리스트를 생성해서 싱크대를 통해서 나가게 되어있다.
+    sink.add(comments);
   });
 
   final combineListOfPosts =
