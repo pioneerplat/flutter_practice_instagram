@@ -26,8 +26,8 @@ class CommentNetworkRepository with Transformers {
           KEY_NUMOFCOMMENTS: numOfComments + 1,
           //commentsData에서 가지고 온다
           KEY_LASTCOMMENT: commentData[KEY_COMMENT],
-          KEY_LASTCOMMENTTIME: commentData[KEY_LASTCOMMENTTIME],
-          KEY_LASTCOMMENTOR: commentData[KEY_LASTCOMMENTOR],
+          KEY_LASTCOMMENTTIME: commentData[KEY_COMMENTTIME],
+          KEY_LASTCOMMENTOR: commentData[KEY_USERNAME],
         });
       }
     });
