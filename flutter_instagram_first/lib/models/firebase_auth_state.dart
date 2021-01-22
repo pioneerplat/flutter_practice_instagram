@@ -119,10 +119,10 @@ class FirebaseAuthState extends ChangeNotifier {
     _firebaseAuthStatus = FirebaseAuthStatus.signout;
     if (_firebaseUser != null) {
       _firebaseUser = null;
-      await _firebaseAuth.signOut();
       if (await _facebookLogin.isLoggedIn) {
         await _facebookLogin.logOut();
       }
+      await _firebaseAuth.signOut();
     }
     notifyListeners();
   }

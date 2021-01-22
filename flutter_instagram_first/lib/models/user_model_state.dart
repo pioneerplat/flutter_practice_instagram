@@ -20,9 +20,9 @@ class UserModelState extends ChangeNotifier {
       _currentStreamSub = currentStreamSub;
 
   //유저가 로그아웃을 했을 때 구독권을 취소
-  clear() {
+  clear() async {
     //구독권이 있는지 없는지 체크
-    if (_currentStreamSub != null) _currentStreamSub.cancel();
+    if (_currentStreamSub != null) await _currentStreamSub.cancel();
     _currentStreamSub = null;
     _userModel = null;
   }
