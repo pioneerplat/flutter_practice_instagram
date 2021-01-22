@@ -3,17 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_instagram_first/constants/common_size.dart';
 import 'package:flutter_instagram_first/constants/screen_size.dart';
 import 'package:flutter_instagram_first/models/firestore/post_model.dart';
+import 'package:flutter_instagram_first/models/user_model_state.dart';
 import 'package:flutter_instagram_first/repo/image_network_repository.dart';
+import 'package:flutter_instagram_first/repo/post_network_repository.dart';
 import 'package:flutter_instagram_first/screens/comments_screen.dart';
 import 'package:flutter_instagram_first/widgets/comment.dart';
 import 'package:flutter_instagram_first/widgets/my_progress_indicator.dart';
 import 'package:flutter_instagram_first/widgets/rounded_avatar.dart';
+import 'package:provider/provider.dart';
 
 class Post extends StatelessWidget {
   final PostModel postModel;
 
-  Post(
-    this.postModel, {
+  Post(this.postModel, {
     Key key,
   }) : super(key: key);
 
@@ -71,7 +73,8 @@ class Post extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: common_gap),
       child: Text(
-        '${postModel.numOfLikes == null ? 0 : postModel.numOfLikes.length} likes',
+        '${postModel.numOfLikes == null ? 0 : postModel.numOfLikes
+            .length} likes',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
     );
@@ -87,7 +90,9 @@ class Post extends StatelessWidget {
         IconButton(
             icon: ImageIcon(AssetImage('assets/images/comment.png')),
             color: Colors.black87,
-            onPressed: (){_goToComments(context);}),
+            onPressed: () {
+              _goToComments(context);
+            }),
         IconButton(
             icon: ImageIcon(AssetImage('assets/images/direct_message.png')),
             color: Colors.black87,
@@ -96,10 +101,26 @@ class Post extends StatelessWidget {
         //공간을 채우는 위젯
         Spacer(),
 
-        IconButton(
-            icon: ImageIcon(AssetImage('assets/images/heart_selected.png')),
-            color: Colors.black87,
-            onPressed: null)
+        Consumer<UserModelState>(
+          builder: (BuildContext context, UserModelState userModelState,
+              Widget child) {
+            return IconButton(
+                icon: ImageIcon(
+                  //userKey를 포함하고 있는지 확인하고 있으면 빨간색 하트
+                  AssetImage(postModel.numOfLikes.contains(
+                    //Provider.of<UserModelState>(context, listen: false) 대신 userModelState쓰면된다
+                      userModelState.userModel.userKey)
+                      ? 'assets/images/heart_selected.png'
+                      : 'assets/images/heart.png'),
+                  color: Colors.redAccent,
+                ),
+                color: Colors.black87,
+                onPressed: () {
+                  postNetworkRepository.toggleLike(
+                      postModel.postKey, userModelState.userModel.userKey);
+                });
+          },
+        )
       ],
     );
   }
@@ -133,7 +154,7 @@ class Post extends StatelessWidget {
       containerSize: size.width,
     );
     return CachedNetworkImage(
-        //가로200 세로300
+      //가로200 세로300
         imageUrl: postModel.postImg,
 
         //Url에서 이미지를 불러 오는 동안 loading시간에 할일 설정
@@ -142,10 +163,8 @@ class Post extends StatelessWidget {
         },
 
         //위 Url에서 다운받은 이미지를 imageProvider를 통해서 가져온다.
-        imageBuilder: (
-          BuildContext context,
-          ImageProvider imageProvider,
-        ) {
+        imageBuilder: (BuildContext context,
+            ImageProvider imageProvider,) {
           return AspectRatio(
             // 이미지 가로 세로의 비를 1로
             aspectRatio: 1,
@@ -153,7 +172,7 @@ class Post extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                   image:
-                      DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+                  DecorationImage(image: imageProvider, fit: BoxFit.cover)),
             ),
           );
         });
