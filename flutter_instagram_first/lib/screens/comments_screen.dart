@@ -38,7 +38,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
                       builder: (BuildContext context,
                           List<CommentModel> comments, Widget child) {
                         return ListView.separated(
-
+                          //마지막에 입력한 댓글을 맨 위로 올려준다
+                          reverse: true,
                           //각 각의 comment들 사이에 얼마만큼의 공간을 줄거냐
                           separatorBuilder:
                               (BuildContext context, int index) {

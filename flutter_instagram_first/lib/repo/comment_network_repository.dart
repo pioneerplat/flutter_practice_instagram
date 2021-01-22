@@ -38,7 +38,7 @@ class CommentNetworkRepository with Transformers {
         .collection(COLLECTION_POSTS)
         .document(postKey)
         .collection(COLLECTION_COMMENTS)
-        .orderBy(KEY_COMMENTTIME, descending: false)
+        .orderBy(KEY_COMMENTTIME, descending: true)//내림차순 false로하면 오름차순
         .snapshots().transform(toComments);
   }
 }
