@@ -69,7 +69,24 @@ class PostNetworkRepository with Transformers {
     //List<List<PostModel>> 이런 식으로 도착하는 걸 combineListOfPosts를 이용해
     //하나의 리스트로 합쳐준 다음 다시 latestToTop을 사용해 순서를 정렬해서 stream으로 내보내 준다
     return CombineLatestStream.list<List<PostModel>>(streams)
-        .transform(combineListOfPosts).transform(latestToTop);
+        .transform(combineListOfPosts)
+        .transform(latestToTop);
+  }
+
+  Future<void> toggleLike(String postKey, String userKey) async {
+    final DocumentReference postRef =
+        Firestore.instance.collection(COLLECTION_POSTS).document(postKey);
+    final DocumentSnapshot postSnapshot = await postRef.get();
+      if(postSnapshot.exists){
+        if(postSnapshot.data[KEY_NUMOFLIKES].contains(userKey)){//내 유저키가 포함되어 있는지 
+          //yes :유
+          postRef.updateData({KEY_NUMOFLIKES: FieldValue.arrayRemove([userKey])});
+        }else{
+          //no : KEY_NUMOFLIKES에 내 저키를 포함 시킨다
+          postRef.updateData({KEY_NUMOFLIKES: FieldValue.arrayUnion([userKey])});
+        }
+      }
+
   }
 }
 

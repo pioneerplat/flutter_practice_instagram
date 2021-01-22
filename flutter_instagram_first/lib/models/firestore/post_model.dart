@@ -6,6 +6,7 @@ class PostModel {
   final String userKey;
   final String username;
   final String postImg;
+  //userKey를 넣을거라 List로 만듬
   final List<dynamic> numOfLikes;
   final String caption;
   final String lastCommentor; // 마지막으로 comment한 사람의 user ID
